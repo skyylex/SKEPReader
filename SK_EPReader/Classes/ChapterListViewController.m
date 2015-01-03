@@ -43,7 +43,7 @@
     }
     
     cell.textLabel.numberOfLines = 2;
-    cell.textLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+    cell.textLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
     cell.textLabel.adjustsFontSizeToFitWidth = YES;
     cell.textLabel.text = [self.epubViewController.loadedEpub.spineArray[indexPath.row] title];
     

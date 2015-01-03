@@ -9,34 +9,40 @@
 #import "Chapter.h"
 #import "NSString+HTML.h"
 
-@interface Chapter() {
-    UIWebView *webView;
-}
+@interface Chapter()
+@property (nonatomic, strong) UIWebView *webView;
+
 
 @end
 
 @implementation Chapter 
 
-- (id) initWithPath:(NSString*)theSpinePath title:(NSString*)theTitle chapterIndex:(int) theIndex{
-    if((self=[super init])){
+- (id)initWithPath:(NSString *)theSpinePath
+             title:(NSString *)theTitle
+      chapterIndex:(NSUInteger)theIndex {
+    if (self = [super init]) {
         self.spinePath = theSpinePath;
         self.title = theTitle;
         self.chapterIndex = theIndex;
 
-		NSString *html = [[NSString alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL fileURLWithPath:theSpinePath]] encoding:NSUTF8StringEncoding];
+        NSData *spineData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:theSpinePath]];
+		NSString *html = [[NSString alloc] initWithData:spineData
+                                               encoding:NSUTF8StringEncoding];
 		self.text = [html stringByConvertingHTMLToPlainText];
     }
+    
     return self;
 }
 
-- (void) loadChapterWithWindowSize:(CGRect)theWindowSize fontPercentSize:(int) theFontPercentSize{
+- (void)loadChapterWithWindowSize:(CGRect)theWindowSize
+                  fontPercentSize:(NSUInteger)theFontPercentSize {
     self.fontPercentSize = theFontPercentSize;
     self.windowSize = theWindowSize;
-//  NSLog(@"webviewSize: %f * %f, fontPercentSize: %d", theWindowSize.size.width, theWindowSize.size.height,theFontPercentSize);
-    webView = [[UIWebView alloc] initWithFrame:self.windowSize];
-    [webView setDelegate:self];
-    NSURLRequest* urlRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:self.spinePath]];
-    [webView loadRequest:urlRequest];
+    
+    self.webView = [[UIWebView alloc] initWithFrame:self.windowSize];
+    [self.webView setDelegate:self];
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:self.spinePath]];
+    [self.webView loadRequest:urlRequest];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
@@ -63,24 +69,15 @@
     
 	
 	[webView stringByEvaluatingJavaScriptFromString:varMySheet];
-	
 	[webView stringByEvaluatingJavaScriptFromString:addCSSRule];
-		
 	[webView stringByEvaluatingJavaScriptFromString:insertRule1];
-	
 	[webView stringByEvaluatingJavaScriptFromString:insertRule2];
-	
-    [webView stringByEvaluatingJavaScriptFromString:setTextSizeRule];
+	[webView stringByEvaluatingJavaScriptFromString:setTextSizeRule];
     
-	int totalWidth = [[webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] intValue];
-	self.pageCount = (int)((float)totalWidth/webView.bounds.size.width);
-	
-//    NSLog(@"Chapter %d: %@ -> %d pages", chapterIndex, title, pageCount);
+	float totalWidth = [[webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] floatValue];
+	self.pageCount = (NSUInteger)(totalWidth / webView.bounds.size.width);
     
     [self.delegate chapterDidFinishLoad:self];
-    
 }
-
-
 
 @end

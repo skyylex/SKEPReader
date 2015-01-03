@@ -1,5 +1,6 @@
 #import "UIWebView+SearchWebView.h"
 
+
 @implementation UIWebView (SearchWebView)
 
 - (NSInteger)highlightAllOccurencesOfString:(NSString*)str {

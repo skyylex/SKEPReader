@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 
 @class Chapter;
 
@@ -30,9 +31,9 @@
 
 - (id)initWithPath:(NSString *)theSpinePath
              title:(NSString *)theTitle
-      chapterIndex:(int)theIndex;
+      chapterIndex:(NSUInteger)theIndex;
 
 - (void)loadChapterWithWindowSize:(CGRect)theWindowSize
-                  fontPercentSize:(int)theFontPercentSize;
+                  fontPercentSize:(NSUInteger)theFontPercentSize;
 
 @end

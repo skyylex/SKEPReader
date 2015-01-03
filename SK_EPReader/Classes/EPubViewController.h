@@ -10,20 +10,21 @@
 #import "ZipArchive.h"
 #import "EPub.h"
 #import "Chapter.h"
+#import "WYPopoverController.h"
 
 @class SearchResultsViewController;
 @class SearchResult;
 
 @interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterDelegate, UISearchBarDelegate> {
     
-    int currentSpineIndex;
-	int currentPageInSpineIndex;
-	int pagesInCurrentSpineCount;
-	int currentTextSize;
-	int totalPagesCount;
+    NSUInteger currentSpineIndex;
+	NSUInteger currentPageInSpineIndex;
+	NSUInteger pagesInCurrentSpineCount;
+	NSUInteger currentTextSize;
+	NSUInteger totalPagesCount;
     
-    UIPopoverController *chaptersPopover;
-    UIPopoverController *searchResultsPopover;
+    WYPopoverController *chaptersPopover;
+    WYPopoverController *searchResultsPopover;
 
     SearchResultsViewController* searchResViewController;
 }
@@ -33,11 +34,10 @@
 - (IBAction)decreaseTextSizeClicked:(id)sender;
 - (IBAction)slidingStarted:(id)sender;
 - (IBAction)slidingEnded:(id)sender;
-- (IBAction)doneClicked:(id)sender;
 
-- (void)loadSpine:(int)spineIndex atPageIndex:(int)pageIndex highlightSearchResult:(SearchResult*)theResult;
+- (void)loadSpine:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult *)theResult;
 
-- (void) loadEpub:(NSURL*) epubURL;
+- (void)loadEpub:(NSURL*) epubURL;
 
 @property (nonatomic, strong) EPub* loadedEpub;
 

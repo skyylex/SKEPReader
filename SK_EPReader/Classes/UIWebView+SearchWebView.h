@@ -1,5 +1,6 @@
 
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 
 @interface UIWebView (SearchWebView)
 
