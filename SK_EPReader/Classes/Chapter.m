@@ -77,6 +77,8 @@
 	float totalWidth = [[webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] floatValue];
 	self.pageCount = (NSUInteger)(totalWidth / webView.bounds.size.width);
     
+    self.webView = nil;
+    
     [self.delegate chapterDidFinishLoad:self];
 }
 
