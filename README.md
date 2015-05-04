@@ -25,7 +25,6 @@ TODO:
 
 - Add support for WKWebView for iOS 8.
 - Move to autolayout
-- Switch to Cocoapods
 - Add tests
 
 Contacts:
