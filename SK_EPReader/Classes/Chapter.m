@@ -7,7 +7,8 @@
 //
 
 #import "Chapter.h"
-#import "NSString+HTML.h"
+#import <GTMNSStringHTMLAdditions/GTMNSString+HTML.h>
+#import <MWFeedParser/NSString+HTML.h>
 
 @interface Chapter()
 @property (nonatomic, strong) UIWebView *webView;
