@@ -1,33 +1,12 @@
-SK_EPReader
-===========
+### SK_EPReader
+
 
 ePub reader framework for iOS based on the https://github.com/fedefrappi/AePubReader
-AePubReader last commit was on 21 Aug 2012. It's a non-ARC project, without many modern features. That's why I decided to update this framework to actual state. If you have any ideas - please contact me (contacts are listed at the bottom).
+AePubReader last commit was on 21 Aug 2012. It was a non-ARC project, that was updated to actual state. If you have any ideas - please contact me (contacts are listed at the bottom).
 
-Features
-====
+#### Pull requests are welcome.
 
-- Full html-rendering (UIWebView rendering-core)
-- Navigation through slider
-- Navigation via chapters list
-- Font size changing
+### Contacts:
 
-Requirements:
-====
-
-- iOS 7+
-- ARC
-- XCode 5+
-- iPhone/iPad
-
-TODO:
-====
-
-- Add support for WKWebView for iOS 8.
-- Move to autolayout
-- Add tests
-
-Contacts:
-====
 
 yury.lapitsky@gmail.com
