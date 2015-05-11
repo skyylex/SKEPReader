@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 
+
+
 @interface AppDelegate ()
 
 @end
@@ -16,15 +18,16 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    // Override point for customization after app launch.
-    
-    self.window.rootViewController = self.detailViewController;
-    [self.window makeKeyAndVisible];
-    
-    NSString *epubFilepath = [[NSBundle mainBundle] pathForResource:@"vhugo" ofType:@"epub"];
-    
-    [self.detailViewController loadEpub:[NSURL fileURLWithPath:epubFilepath]];
+//    self.window.rootViewController = self.detailViewController;
+//    [self.window makeKeyAndVisible];
+//    
+//    NSURL *sampleBookURL = [NSURL URLWithString:SKSampleEpubBookURL];
+//    NSData *data = [NSData dataWithContentsOfURL:sampleBookURL];
+//    
+//    NSString *tempFolder = [NSString stringWithFormat:@"%@/notredam.epub", NSTemporaryDirectory()];
+//    [data writeToFile:tempFolder atomically:YES];
+//    
+//    [self.detailViewController loadEpub:[NSURL fileURLWithPath:tempFolder]];
     
     return YES;
 }

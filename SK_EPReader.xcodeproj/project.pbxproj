@@ -13,10 +13,8 @@
 		422CA55E1A587A8300F60A5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422CA55C1A587A8300F60A5F /* LaunchScreen.xib */; };
 		422CA56A1A587A8300F60A5F /* SK_EPReaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5691A587A8300F60A5F /* SK_EPReaderTests.m */; };
 		422CA59F1A587AAE00F60A5F /* slider_ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 422CA59E1A587AAE00F60A5F /* slider_ball.png */; };
-		422CA5A51A587AC900F60A5F /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A01A587AC900F60A5F /* MainWindow.xib */; };
 		422CA5A61A587AC900F60A5F /* orangeslide.png in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A11A587AC900F60A5F /* orangeslide.png */; };
 		422CA5A71A587AC900F60A5F /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A21A587AC900F60A5F /* SearchWebView.js */; };
-		422CA5A81A587AC900F60A5F /* vhugo.epub in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A31A587AC900F60A5F /* vhugo.epub */; };
 		422CA5A91A587AC900F60A5F /* yellowslide.png in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A41A587AC900F60A5F /* yellowslide.png */; };
 		422CA5D51A587AF100F60A5F /* Chapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5AE1A587AF100F60A5F /* Chapter.m */; };
 		422CA5D61A587AF100F60A5F /* ChapterListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B01A587AF100F60A5F /* ChapterListViewController.m */; };
@@ -33,6 +31,8 @@
 		422CA5F71A587FA700F60A5F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5EA1A587C3300F60A5F /* libxml2.dylib */; };
 		422CA5F81A587FB100F60A5F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5EC1A587C4A00F60A5F /* CoreGraphics.framework */; };
 		422CA5FA1A5880D600F60A5F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5F91A5880D600F60A5F /* libz.dylib */; };
+		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
+		42FB6B491B01498B001CFBCC /* SKBookListTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FB6B481B01498B001CFBCC /* SKBookListTableController.m */; };
 		5B60A90DCCE0AE09A6AB8020 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F819356432995F2000CDA8 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -52,18 +52,16 @@
 		422CA54A1A587A8300F60A5F /* SK_EPReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SK_EPReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		422CA54E1A587A8300F60A5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		422CA54F1A587A8300F60A5F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		422CA5511A587A8300F60A5F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		422CA5521A587A8300F60A5F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		422CA5511A587A8300F60A5F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SK_EPReader/AppDelegate.h; sourceTree = "<group>"; };
+		422CA5521A587A8300F60A5F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SK_EPReader/AppDelegate.m; sourceTree = "<group>"; };
 		422CA55A1A587A8300F60A5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		422CA55D1A587A8300F60A5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		422CA5631A587A8300F60A5F /* SK_EPReaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SK_EPReaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		422CA5681A587A8300F60A5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		422CA5691A587A8300F60A5F /* SK_EPReaderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SK_EPReaderTests.m; sourceTree = "<group>"; };
 		422CA59E1A587AAE00F60A5F /* slider_ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = slider_ball.png; sourceTree = "<group>"; };
-		422CA5A01A587AC900F60A5F /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		422CA5A11A587AC900F60A5F /* orangeslide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orangeslide.png; sourceTree = "<group>"; };
 		422CA5A21A587AC900F60A5F /* SearchWebView.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = SearchWebView.js; sourceTree = "<group>"; };
-		422CA5A31A587AC900F60A5F /* vhugo.epub */ = {isa = PBXFileReference; lastKnownFileType = file; path = vhugo.epub; sourceTree = "<group>"; };
 		422CA5A41A587AC900F60A5F /* yellowslide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yellowslide.png; sourceTree = "<group>"; };
 		422CA5AD1A587AF100F60A5F /* Chapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chapter.h; sourceTree = "<group>"; };
 		422CA5AE1A587AF100F60A5F /* Chapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chapter.m; sourceTree = "<group>"; };
@@ -87,6 +85,9 @@
 		422CA5EE1A587C5100F60A5F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		422CA5F01A587C6F00F60A5F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		422CA5F91A5880D600F60A5F /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		42FB6B441B014653001CFBCC /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
+		42FB6B471B01498A001CFBCC /* SKBookListTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SKBookListTableController.h; path = "untitled folder/SKBookListTableController.h"; sourceTree = "<group>"; };
+		42FB6B481B01498B001CFBCC /* SKBookListTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SKBookListTableController.m; path = "untitled folder/SKBookListTableController.m"; sourceTree = "<group>"; };
 		8C632C0D8AEB52B0FADC2C0F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +118,7 @@
 		422CA5411A587A8300F60A5F = {
 			isa = PBXGroup;
 			children = (
+				42FB6B461B0147B5001CFBCC /* SK_EPReaderSample */,
 				422CA5F41A587F6A00F60A5F /* Frameworks */,
 				422CA54C1A587A8300F60A5F /* SK_EPReader */,
 				422CA5661A587A8300F60A5F /* SK_EPReaderTests */,
@@ -138,8 +140,6 @@
 			isa = PBXGroup;
 			children = (
 				422CA5AA1A587AF100F60A5F /* Classes */,
-				422CA5511A587A8300F60A5F /* AppDelegate.h */,
-				422CA5521A587A8300F60A5F /* AppDelegate.m */,
 				422CA55A1A587A8300F60A5F /* Images.xcassets */,
 				422CA55C1A587A8300F60A5F /* LaunchScreen.xib */,
 				422CA54D1A587A8300F60A5F /* Supporting Files */,
@@ -150,14 +150,13 @@
 		422CA54D1A587A8300F60A5F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				422CA5A01A587AC900F60A5F /* MainWindow.xib */,
 				422CA5A11A587AC900F60A5F /* orangeslide.png */,
 				422CA5A21A587AC900F60A5F /* SearchWebView.js */,
-				422CA5A31A587AC900F60A5F /* vhugo.epub */,
 				422CA5A41A587AC900F60A5F /* yellowslide.png */,
 				422CA59E1A587AAE00F60A5F /* slider_ball.png */,
 				422CA54E1A587A8300F60A5F /* Info.plist */,
 				422CA54F1A587A8300F60A5F /* main.m */,
+				42FB6B441B014653001CFBCC /* Storyboard.storyboard */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -214,6 +213,17 @@
 				19F819356432995F2000CDA8 /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		42FB6B461B0147B5001CFBCC /* SK_EPReaderSample */ = {
+			isa = PBXGroup;
+			children = (
+				422CA5511A587A8300F60A5F /* AppDelegate.h */,
+				422CA5521A587A8300F60A5F /* AppDelegate.m */,
+				42FB6B471B01498A001CFBCC /* SKBookListTableController.h */,
+				42FB6B481B01498B001CFBCC /* SKBookListTableController.m */,
+			);
+			name = SK_EPReaderSample;
 			sourceTree = "<group>";
 		};
 		94EA425CA53AD2120EC84F34 /* Pods */ = {
@@ -308,12 +318,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				422CA5A91A587AC900F60A5F /* yellowslide.png in Resources */,
-				422CA5A51A587AC900F60A5F /* MainWindow.xib in Resources */,
 				422CA5A71A587AC900F60A5F /* SearchWebView.js in Resources */,
 				422CA55E1A587A8300F60A5F /* LaunchScreen.xib in Resources */,
 				422CA55B1A587A8300F60A5F /* Images.xcassets in Resources */,
+				42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */,
 				422CA5D71A587AF100F60A5F /* ChapterListViewController.xib in Resources */,
-				422CA5A81A587AC900F60A5F /* vhugo.epub in Resources */,
 				422CA59F1A587AAE00F60A5F /* slider_ball.png in Resources */,
 				422CA5D91A587AF100F60A5F /* EPubView.xib in Resources */,
 				422CA5A61A587AC900F60A5F /* orangeslide.png in Resources */,
@@ -368,6 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42FB6B491B01498B001CFBCC /* SKBookListTableController.m in Sources */,
 				422CA5D81A587AF100F60A5F /* EPub.m in Sources */,
 				422CA5531A587A8300F60A5F /* AppDelegate.m in Sources */,
 				422CA5D51A587AF100F60A5F /* Chapter.m in Sources */,
