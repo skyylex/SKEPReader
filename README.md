@@ -6,8 +6,9 @@ AePubReader last commit was on 21 Aug 2012. It was a non-ARC project, that was u
 
 #### Book sources
 
-All sources were get from https://github.com/IDPF/epub3-samples
-Books are used only for testing purpose.
+All sources and compile tools were get from https://github.com/IDPF/epub3-samples 
+Books are used only for testing purpose. 
+> Unless specified otherwise in the samples table, all samples are licensed under CC-BY-SA 3.0 
 
 #### Pull requests are welcome.
 
