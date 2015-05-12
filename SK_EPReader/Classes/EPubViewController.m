@@ -164,11 +164,11 @@
 #pragma mark Page Label
 
 - (void)setPageLabelForAmountOnly {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"?/%d", totalPagesCount]];
+    [self.currentPageLabel setText:[NSString stringWithFormat:@"?/%ld", totalPagesCount]];
 }
 
 - (void)setPageLabelForAmountAndIndex {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"%d/%d", [self getGlobalPageCount], totalPagesCount]];
+    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self getGlobalPageCount], totalPagesCount]];
 }
 
 #pragma mark -
@@ -260,7 +260,7 @@
 
 - (IBAction)showChapterIndex:(id)sender {
     if (!chaptersPopover) {
-        ChapterListViewController *chapterListView = [[ChapterListViewController alloc] initWithNibName:@"ChapterListViewController" bundle:[NSBundle mainBundle]];
+        ChapterListViewController *chapterListView = [ChapterListViewController new];
         [chapterListView setEpubViewController:self];
         chaptersPopover = [[WYPopoverController alloc] initWithContentViewController:chapterListView];
         [chaptersPopover setPopoverContentSize:CGSizeMake(400, 600)];
@@ -295,7 +295,7 @@
         targetPage++;
     }
     
-	[self.currentPageLabel setText:[NSString stringWithFormat:@"%d/%d", targetPage, totalPagesCount]];
+	[self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", targetPage, totalPagesCount]];
 }
 
 - (IBAction)slidingEnded:(id)sender {
@@ -400,22 +400,7 @@
     
     [self connectGestures];
     
-	currentTextSize = 100;	 
-	
-	[self.pageSlider setThumbImage:[UIImage imageNamed:@"slider_ball.png"]
-                     forState:UIControlStateNormal];
-	[self.pageSlider setMinimumTrackImage:[[UIImage imageNamed:@"orangeSlide.png"]
-                                           stretchableImageWithLeftCapWidth:10
-                                           topCapHeight:0]
-                            forState:UIControlStateNormal];
-	[self.pageSlider setMaximumTrackImage:[[UIImage imageNamed:@"yellowSlide.png"]
-                                           stretchableImageWithLeftCapWidth:10
-                                           topCapHeight:0]
-                            forState:UIControlStateNormal];
-    
-	searchResViewController = [[SearchResultsViewController alloc] initWithNibName:@"SearchResultsViewController"
-                                                                            bundle:[NSBundle mainBundle]];
-	searchResViewController.epubViewController = self;
+    currentTextSize = 100;
 }
 
 #pragma mark -
