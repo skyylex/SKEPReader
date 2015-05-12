@@ -9,6 +9,8 @@
 #import "EPub.h"
 #import "ZipArchive.h"
 #import "Chapter.h"
+#import "SKFileSystemSupport.h"
+#import <KSCrypto/KSSHA1Stream.h>
 
 static NSString * const kMediaTypeKey = @"media-type";
 static NSString * const kHrefTypeKey = @"href";
@@ -21,47 +23,57 @@ static NSString * const kOPFItemKey = @"//opf:item";
 
 @interface EPub()
 
-- (void)parseEpub;
-- (void)unzipAndSaveFileNamed:(NSString*)fileName;
-- (NSString *)applicationDocumentsDirectory;
-- (NSString *)parseManifestFile;
-- (void)parseOPF:(NSString *)opfPath;
+@property (nonatomic, strong) NSString *unzippedBookDirectory;
 
 @end
 
 @implementation EPub
 
+#pragma mark - Lifecycle
+
 - (instancetype)initWithEPubPath:(NSString *)path {
-	if (self = [super init]){
+	if (self = [super init]) {
+        NSParameterAssert(path != nil);
+        
 		self.epubFilePath = path;
 		self.spineArray = [NSMutableArray array];
-		[self parseEpub];
+        
+        [self parseEpub];
 	}
     
 	return self;
 }
 
+#pragma mark - Parsing
+
+- (void)saveEpubHash {
+    NSAssert([[NSFileManager defaultManager] fileExistsAtPath:self.epubFilePath], @"no file");
+    
+    NSData *epubData = [NSData dataWithContentsOfFile:self.epubFilePath];
+    self.sha1 = [epubData ks_SHA1DigestString];
+}
+
 - (void)parseEpub {
+    [self saveEpubHash];
 	[self unzipAndSaveFileNamed:self.epubFilePath];
     
 	NSString *opfPath = [self parseManifestFile];
 	[self parseOPF:opfPath];
 }
 
-- (void)unzipAndSaveFileNamed:(NSString *)fileName{
-	ZipArchive *zipArchive = [[ZipArchive alloc] init];
+- (void)unzipAndSaveFileNamed:(NSString *)fileName {
+	ZipArchive *zipArchive = [ZipArchive new];
 	if ([zipArchive UnzipOpenFile:self.epubFilePath]) {
-		NSString *strPath = [NSString stringWithFormat:@"%@/UnzippedEpub",[self applicationDocumentsDirectory]];
         
 		//Delete all the previous files
 		NSFileManager *filemanager = [[NSFileManager alloc] init];
-		if ([filemanager fileExistsAtPath:strPath]) {
+		if ([filemanager fileExistsAtPath:self.unzippedBookDirectory]) {
 			NSError *error;
-			[filemanager removeItemAtPath:strPath error:&error];
+			[filemanager removeItemAtPath:self.unzippedBookDirectory error:&error];
 		}
 		
         //start unzip
-		BOOL ret = [zipArchive UnzipFileTo:[NSString stringWithFormat:@"%@/",strPath]
+		BOOL ret = [zipArchive UnzipFileTo:[NSString stringWithFormat:@"%@/", self.unzippedBookDirectory]
                                  overWrite:YES];
 		if (NO == ret) {
 			// error handler here
@@ -77,14 +89,8 @@ static NSString * const kOPFItemKey = @"//opf:item";
 	}
 }
 
-- (NSString *)applicationDocumentsDirectory {
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    return basePath;
-}
-
-- (NSString *)parseManifestFile{
-	NSString *manifestFilePath = [NSString stringWithFormat:@"%@/UnzippedEpub/META-INF/container.xml", [self applicationDocumentsDirectory]];
+- (NSString *)parseManifestFile {
+	NSString *manifestFilePath = [NSString stringWithFormat:@"%@/META-INF/container.xml", self.unzippedBookDirectory];
 	NSFileManager *fileManager = [NSFileManager new];
 	if ([fileManager fileExistsAtPath:manifestFilePath]) {
 		//		NSLog(@"Valid epub");
@@ -94,7 +100,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
 		CXMLNode *opfPath = [manifestFile nodeForXPath:@"//@full-path[1]"
                                                  error:nil];
 
-		return [NSString stringWithFormat:@"%@/UnzippedEpub/%@", [self applicationDocumentsDirectory], [opfPath stringValue]];
+		return [NSString stringWithFormat:@"%@/%@", self.unzippedBookDirectory, [opfPath stringValue]];
 	} else {
 		NSLog(@"ERROR: ePub not Valid");
 		return nil;
@@ -167,6 +173,20 @@ static NSString * const kOPFItemKey = @"//opf:item";
 	}
 	
 	self.spineArray = [NSArray arrayWithArray:tmpArray];
+}
+
+#pragma mark - Getters
+
+- (NSString *)unzippedBookDirectory {
+    if (_unzippedBookDirectory == nil) {
+        NSString *applicationSupportDirectory = [SKFileSystemSupport applicationSupportDirectory];
+        _unzippedBookDirectory = [applicationSupportDirectory stringByAppendingPathComponent:self.sha1];
+        [SKFileSystemSupport createDirectoryIfNeeded:_unzippedBookDirectory];
+        [SKFileSystemSupport addSkipBackupAttributeToItemAtPath:_unzippedBookDirectory];
+        
+    }
+    
+    return _unzippedBookDirectory;
 }
 
 

@@ -1,5 +1,7 @@
 platform :ios, '7.0'
 
+link_with 'SK_EPReader', 'SK_EPReaderTests'
+
 pod 'TouchXML', '~> 0.1'
 pod 'WYPopoverController', '~> 0.3.7'
 pod 'GTMNSStringHTMLAdditions', '~> 0.1'

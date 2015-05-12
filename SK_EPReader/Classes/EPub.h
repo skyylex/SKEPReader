@@ -13,6 +13,7 @@
 @interface EPub : NSObject
 
 @property (nonatomic, strong) NSString *epubFilePath;
+@property (nonatomic, strong) NSString *sha1;
 @property (nonatomic, strong) NSArray *spineArray;
 
 - (instancetype)initWithEPubPath:(NSString *)path;
