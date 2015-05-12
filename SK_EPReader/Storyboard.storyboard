@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -77,6 +78,98 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Ff-3m-IPB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1457" y="256"/>
+        </scene>
+        <!--Pub View Controller-->
+        <scene sceneID="6Y3-np-KkD">
+            <objects>
+                <viewController storyboardIdentifier="EPubViewControllerStoryboardId" id="Uga-jg-Wa6" customClass="EPubViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="JZk-lx-0z7"/>
+                        <viewControllerLayoutGuide type="bottom" id="ANF-th-FFN"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1ts-FK-gia">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gPa-We-EyW">
+                                <rect key="frame" x="0.0" y="72" width="600" height="440"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTt-Bg-oFM">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem title="Chapters" id="WBg-EE-9kr">
+                                        <connections>
+                                            <action selector="showChapterIndex:" destination="Uga-jg-Wa6" id="d7c-x4-qMN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="VhP-Mf-2qy"/>
+                                    <barButtonItem title="a" id="oZG-72-8mF">
+                                        <connections>
+                                            <action selector="decreaseTextSizeClicked:" destination="Uga-jg-Wa6" id="a5H-b7-hfF"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="A" id="sg3-Ux-ngy">
+                                        <connections>
+                                            <action selector="increaseTextSizeClicked:" destination="Uga-jg-Wa6" id="GsY-5q-XXN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4cS-MS-p09">
+                                <rect key="frame" x="279" y="517" width="42" height="24"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="K2H-Vf-ELO">
+                                <rect key="frame" x="14" y="550" width="572" height="31"/>
+                                <connections>
+                                    <action selector="slidingEnded:" destination="Uga-jg-Wa6" eventType="touchUpOutside" id="Nx4-QF-j9T"/>
+                                    <action selector="slidingEnded:" destination="Uga-jg-Wa6" eventType="touchUpInside" id="opN-37-hsG"/>
+                                    <action selector="slidingStarted:" destination="Uga-jg-Wa6" eventType="valueChanged" id="SXf-vQ-QW0"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="fTt-Bg-oFM" firstAttribute="leading" secondItem="1ts-FK-gia" secondAttribute="leading" id="120-xk-Gpf"/>
+                            <constraint firstItem="fTt-Bg-oFM" firstAttribute="top" secondItem="JZk-lx-0z7" secondAttribute="bottom" constant="8" id="2aO-wk-Zhr"/>
+                            <constraint firstItem="gPa-We-EyW" firstAttribute="top" secondItem="fTt-Bg-oFM" secondAttribute="bottom" id="3sx-ws-YB7"/>
+                            <constraint firstItem="ANF-th-FFN" firstAttribute="top" secondItem="4cS-MS-p09" secondAttribute="bottom" constant="59" id="7zk-Li-6Tq"/>
+                            <constraint firstAttribute="trailing" secondItem="fTt-Bg-oFM" secondAttribute="trailing" id="APE-Zz-fAA"/>
+                            <constraint firstItem="fTt-Bg-oFM" firstAttribute="top" secondItem="JZk-lx-0z7" secondAttribute="bottom" constant="8" id="GdI-Ly-X4S"/>
+                            <constraint firstAttribute="centerX" secondItem="4cS-MS-p09" secondAttribute="centerX" id="Im3-h7-IQ5"/>
+                            <constraint firstItem="ANF-th-FFN" firstAttribute="top" secondItem="gPa-We-EyW" secondAttribute="bottom" constant="88" id="Izy-VJ-u9E"/>
+                            <constraint firstItem="K2H-Vf-ELO" firstAttribute="trailing" secondItem="1ts-FK-gia" secondAttribute="trailingMargin" id="Owi-Se-ilu"/>
+                            <constraint firstItem="K2H-Vf-ELO" firstAttribute="leading" secondItem="1ts-FK-gia" secondAttribute="leadingMargin" id="S2C-cj-uYZ"/>
+                            <constraint firstItem="K2H-Vf-ELO" firstAttribute="top" secondItem="4cS-MS-p09" secondAttribute="bottom" constant="9" id="bXl-WS-RBg"/>
+                            <constraint firstItem="4cS-MS-p09" firstAttribute="top" secondItem="gPa-We-EyW" secondAttribute="bottom" constant="8" id="cI8-8s-pj6"/>
+                            <constraint firstAttribute="trailing" secondItem="gPa-We-EyW" secondAttribute="trailing" id="ih2-id-Aug"/>
+                            <constraint firstItem="gPa-We-EyW" firstAttribute="leading" secondItem="1ts-FK-gia" secondAttribute="leading" id="k0O-5b-9tT"/>
+                            <constraint firstItem="ANF-th-FFN" firstAttribute="top" secondItem="K2H-Vf-ELO" secondAttribute="bottom" constant="20" id="qgN-yP-rsX"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="GdI-Ly-X4S"/>
+                                <exclude reference="bXl-WS-RBg"/>
+                                <exclude reference="cI8-8s-pj6"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="chapterListButton" destination="WBg-EE-9kr" id="26P-cy-VcX"/>
+                        <outlet property="currentPageLabel" destination="4cS-MS-p09" id="IRu-OY-DQ7"/>
+                        <outlet property="decTextSizeButton" destination="oZG-72-8mF" id="aHz-wn-jZD"/>
+                        <outlet property="incTextSizeButton" destination="sg3-Ux-ngy" id="Mo7-XZ-qgC"/>
+                        <outlet property="pageSlider" destination="K2H-Vf-ELO" id="qOb-89-lsv"/>
+                        <outlet property="toolbar" destination="fTt-Bg-oFM" id="1Cl-Gm-qXp"/>
+                        <outlet property="webView" destination="gPa-We-EyW" id="S1Q-1J-W4U"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="B9D-o6-05w" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2108" y="266"/>
         </scene>
     </scenes>
 </document>

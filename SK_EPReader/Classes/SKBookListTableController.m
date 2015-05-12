@@ -58,7 +58,7 @@ static NSString *const SKEpubExtension = @"epub";
     NSString *epubFilePath = [SKFileSystemSupport saveFileURLDataToTheTempFolder:urlString];
     NSURL *epubURL = [NSURL fileURLWithPath:epubFilePath];
     
-    EPubViewController *epubViewController = [EPubViewController new];
+    EPubViewController *epubViewController = [self.storyboard instantiateViewControllerWithIdentifier:EPubViewControllerStoryboardId];
     [epubViewController loadEpub:epubURL];
     [self presentViewController:epubViewController animated:YES completion:^{
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

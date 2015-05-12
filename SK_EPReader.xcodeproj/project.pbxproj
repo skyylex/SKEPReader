@@ -27,13 +27,10 @@
 		422CA5A91A587AC900F60A5F /* yellowslide.png in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A41A587AC900F60A5F /* yellowslide.png */; };
 		422CA5D51A587AF100F60A5F /* Chapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5AE1A587AF100F60A5F /* Chapter.m */; };
 		422CA5D61A587AF100F60A5F /* ChapterListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B01A587AF100F60A5F /* ChapterListViewController.m */; };
-		422CA5D71A587AF100F60A5F /* ChapterListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5B11A587AF100F60A5F /* ChapterListViewController.xib */; };
 		422CA5D81A587AF100F60A5F /* EPub.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B31A587AF100F60A5F /* EPub.m */; };
-		422CA5D91A587AF100F60A5F /* EPubView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5B41A587AF100F60A5F /* EPubView.xib */; };
 		422CA5DA1A587AF100F60A5F /* EPubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B61A587AF100F60A5F /* EPubViewController.m */; };
 		422CA5E11A587AF100F60A5F /* SearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5C81A587AF100F60A5F /* SearchResult.m */; };
 		422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5CA1A587AF100F60A5F /* SearchResultsViewController.m */; };
-		422CA5E31A587AF100F60A5F /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5CB1A587AF100F60A5F /* SearchResultsViewController.xib */; };
 		422CA5E41A587AF100F60A5F /* UIWebView+SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5CD1A587AF100F60A5F /* UIWebView+SearchWebView.m */; };
 		422CA5F51A587F9100F60A5F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5F01A587C6F00F60A5F /* UIKit.framework */; };
 		422CA5F61A587F9F00F60A5F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5EE1A587C5100F60A5F /* Foundation.framework */; };
@@ -81,17 +78,14 @@
 		422CA5AE1A587AF100F60A5F /* Chapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chapter.m; sourceTree = "<group>"; };
 		422CA5AF1A587AF100F60A5F /* ChapterListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterListViewController.h; sourceTree = "<group>"; };
 		422CA5B01A587AF100F60A5F /* ChapterListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChapterListViewController.m; sourceTree = "<group>"; };
-		422CA5B11A587AF100F60A5F /* ChapterListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChapterListViewController.xib; sourceTree = "<group>"; };
 		422CA5B21A587AF100F60A5F /* EPub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPub.h; sourceTree = "<group>"; };
 		422CA5B31A587AF100F60A5F /* EPub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPub.m; sourceTree = "<group>"; };
-		422CA5B41A587AF100F60A5F /* EPubView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EPubView.xib; sourceTree = "<group>"; };
 		422CA5B51A587AF100F60A5F /* EPubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPubViewController.h; sourceTree = "<group>"; };
 		422CA5B61A587AF100F60A5F /* EPubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EPubViewController.m; sourceTree = "<group>"; };
 		422CA5C71A587AF100F60A5F /* SearchResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResult.h; sourceTree = "<group>"; };
 		422CA5C81A587AF100F60A5F /* SearchResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResult.m; sourceTree = "<group>"; };
 		422CA5C91A587AF100F60A5F /* SearchResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultsViewController.h; sourceTree = "<group>"; };
 		422CA5CA1A587AF100F60A5F /* SearchResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultsViewController.m; sourceTree = "<group>"; };
-		422CA5CB1A587AF100F60A5F /* SearchResultsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
 		422CA5CC1A587AF100F60A5F /* UIWebView+SearchWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+SearchWebView.h"; sourceTree = "<group>"; };
 		422CA5CD1A587AF100F60A5F /* UIWebView+SearchWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+SearchWebView.m"; sourceTree = "<group>"; };
 		422CA5EA1A587C3300F60A5F /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -209,17 +203,14 @@
 				422CA5AE1A587AF100F60A5F /* Chapter.m */,
 				422CA5AF1A587AF100F60A5F /* ChapterListViewController.h */,
 				422CA5B01A587AF100F60A5F /* ChapterListViewController.m */,
-				422CA5B11A587AF100F60A5F /* ChapterListViewController.xib */,
 				422CA5B21A587AF100F60A5F /* EPub.h */,
 				422CA5B31A587AF100F60A5F /* EPub.m */,
-				422CA5B41A587AF100F60A5F /* EPubView.xib */,
 				422CA5B51A587AF100F60A5F /* EPubViewController.h */,
 				422CA5B61A587AF100F60A5F /* EPubViewController.m */,
 				422CA5C71A587AF100F60A5F /* SearchResult.h */,
 				422CA5C81A587AF100F60A5F /* SearchResult.m */,
 				422CA5C91A587AF100F60A5F /* SearchResultsViewController.h */,
 				422CA5CA1A587AF100F60A5F /* SearchResultsViewController.m */,
-				422CA5CB1A587AF100F60A5F /* SearchResultsViewController.xib */,
 				422CA5CC1A587AF100F60A5F /* UIWebView+SearchWebView.h */,
 				422CA5CD1A587AF100F60A5F /* UIWebView+SearchWebView.m */,
 			);
@@ -360,11 +351,8 @@
 				422CA55E1A587A8300F60A5F /* LaunchScreen.xib in Resources */,
 				422CA55B1A587A8300F60A5F /* Images.xcassets in Resources */,
 				42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */,
-				422CA5D71A587AF100F60A5F /* ChapterListViewController.xib in Resources */,
 				422CA59F1A587AAE00F60A5F /* slider_ball.png in Resources */,
-				422CA5D91A587AF100F60A5F /* EPubView.xib in Resources */,
 				422CA5A61A587AC900F60A5F /* orangeslide.png in Resources */,
-				422CA5E31A587AF100F60A5F /* SearchResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -577,6 +565,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)\"",
@@ -596,6 +585,8 @@
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SK_EPReader/Classes/SK_EPReader-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -605,6 +596,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)\"",
@@ -624,6 +616,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SK_EPReader/Classes/SK_EPReader-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -632,6 +625,7 @@
 			baseConfigurationReference = 8C632C0D8AEB52B0FADC2C0F /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -643,6 +637,8 @@
 				INFOPLIST_FILE = SK_EPReaderTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SK_EPReader/Classes/SK_EPReaderTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SK_EPReader.app/SK_EPReader";
 			};
 			name = Debug;
@@ -652,6 +648,7 @@
 			baseConfigurationReference = 08ACC48D1E675FC921EE7979 /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -659,6 +656,7 @@
 				INFOPLIST_FILE = SK_EPReaderTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "SK_EPReader/Classes/SK_EPReaderTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SK_EPReader.app/SK_EPReader";
 			};
 			name = Release;

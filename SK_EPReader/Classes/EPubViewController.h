@@ -15,6 +15,8 @@
 @class SearchResultsViewController;
 @class SearchResult;
 
+static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStoryboardId";
+
 @interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterDelegate, UISearchBarDelegate> {
     
     NSUInteger currentSpineIndex;
