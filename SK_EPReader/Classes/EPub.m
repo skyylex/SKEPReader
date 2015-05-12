@@ -75,6 +75,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
         //start unzip
 		BOOL ret = [zipArchive UnzipFileTo:[NSString stringWithFormat:@"%@/", self.unzippedBookDirectory]
                                  overWrite:YES];
+        [SKFileSystemSupport addSkipBackupAttributeToItemAtPath:self.unzippedBookDirectory];
 		if (NO == ret) {
 			// error handler here
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
@@ -181,9 +182,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
     if (_unzippedBookDirectory == nil) {
         NSString *applicationSupportDirectory = [SKFileSystemSupport applicationSupportDirectory];
         _unzippedBookDirectory = [applicationSupportDirectory stringByAppendingPathComponent:self.sha1];
-        [SKFileSystemSupport createDirectoryIfNeeded:_unzippedBookDirectory];
-        [SKFileSystemSupport addSkipBackupAttributeToItemAtPath:_unzippedBookDirectory];
-        
+        NSLog(@"_unzippedBookDirectory %@", _unzippedBookDirectory);
     }
     
     return _unzippedBookDirectory;

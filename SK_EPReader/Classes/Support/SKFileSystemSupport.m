@@ -15,7 +15,7 @@
     NSAssert([[NSFileManager defaultManager] fileExistsAtPath:filePathString], @"no file and directory");
     
     NSError *error = nil;
-    NSURL *URL= [NSURL fileURLWithPath:filePathString];
+    NSURL *URL = [NSURL fileURLWithPath:filePathString];
     BOOL success = [URL setResourceValue:[NSNumber numberWithBool:YES]
                                   forKey:NSURLIsExcludedFromBackupKey error:&error];
     
