@@ -19,6 +19,10 @@
 
 @interface EPubViewController(Outlets)
 
+@end
+
+@interface EPubViewController() <EpubRenderer>
+
 @property (nonatomic, strong) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *chapterListButton;
@@ -26,11 +30,6 @@
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *incTextSizeButton;
 @property (nonatomic, strong) IBOutlet UISlider *pageSlider;
 @property (nonatomic, strong) IBOutlet UILabel *currentPageLabel;
-
-@end
-
-@interface EPubViewController()
-
 
 @property (nonatomic, strong) WYPopoverController *chaptersPopover;
 @property (nonatomic, strong) WYPopoverController *searchResultsPopover;
@@ -41,6 +40,20 @@
 @end
 
 @implementation EPubViewController
+
+#pragma mark - EpubReader
+
+- (id<ChapterDelegate>)chapterDelegate {
+    return self;
+}
+
+- (void)updateCurrentPageLabel:(NSString *)text {
+    self.currentPageLabel.text = text;
+}
+
+- (CGRect)webviewFrame {
+    return self.webView.bounds;
+}
 
 #pragma mark - Getters
 
@@ -62,7 +75,7 @@
     self.presenter.epubLoaded = YES;
     
     NSLog(@"loadEpub");
-	[self updatePagination];
+	[self.presenter updatePagination];
 }
 
 #pragma mark -
@@ -122,7 +135,7 @@
 	float pageOffset = pageIndex * self.webView.bounds.size.width;
 
 	NSString *goToOffsetFunc = [NSString stringWithFormat:@" function pageScroll(xOffset){ window.scroll(xOffset,0); } "];
-	NSString *goTo =[NSString stringWithFormat:@"pageScroll(%f)", pageOffset];
+	NSString *goTo = [NSString stringWithFormat:@"pageScroll(%f)", pageOffset];
 	
 	[self.webView stringByEvaluatingJavaScriptFromString:goToOffsetFunc];
 	[self.webView stringByEvaluatingJavaScriptFromString:goTo];
@@ -182,44 +195,13 @@
 }
 
 - (void)setPageLabelForAmountAndIndex {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self getGlobalPageCount], self.presenter.totalPagesCount]];
+    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self.presenter globalPageCount], self.presenter.totalPagesCount]];
 }
 
 #pragma mark -
 #pragma mark Pagination
 
-- (NSUInteger)getGlobalPageCount{
-    __block NSUInteger pageCount = 0;
-    
-    [self.loadedEpub.spineArray enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
-        if (idx < self.presenter.currentSpineIndex) {
-            pageCount += [currentChapter pageCount];
-        }
-        else {
-            *stop = YES;
-        }
-    }];
-    
-    pageCount += self.presenter.currentPageInSpineIndex + 1;
-    return pageCount;
-}
 
-- (void)updatePagination{
-    if (self.presenter.epubLoaded){
-        if (!self.presenter.paginating){
-            NSLog(@"Pagination Started!");
-            self.presenter.paginating = YES;
-            self.presenter.totalPagesCount = 0;
-            
-            [self loadSpine:self.presenter.currentSpineIndex atPageIndex:self.presenter.currentPageInSpineIndex];
-            
-            Chapter *chapter = self.loadedEpub.spineArray[0];
-            
-            [chapter load:self.webView.bounds fontPercentSize:self.presenter.currentTextSize delegate:self];
-            [self.currentPageLabel setText:@"?/?"];
-        }
-    }
-}
 
 #pragma mark -
 #pragma mark IBAction
@@ -228,7 +210,7 @@
 	if (!self.presenter.paginating){
 		if (self.presenter.currentTextSize + kChangeTextStep <= kMaxTextSize){
 			self.presenter.currentTextSize += kChangeTextStep;
-			[self updatePagination];
+			[self.presenter updatePagination];
 			if (self.presenter.currentTextSize == kMaxTextSize){
 				[self.incTextSizeButton setEnabled:NO];
 			}
@@ -240,7 +222,7 @@
 	if (!self.presenter.paginating){
 		if (self.presenter.currentTextSize - kChangeTextStep >= kMinTextSize) {
 			self.presenter.currentTextSize -= kChangeTextStep;
-			[self updatePagination];
+			[self.presenter updatePagination];
 			
             if (self.presenter.currentTextSize == kMinTextSize) {
 				[self.decTextSizeButton setEnabled:NO];
@@ -293,8 +275,8 @@
 #pragma mark Slider
 
 - (void)updateSliderValue {
-    [self.pageSlider setValue:100.0 * (float)[self getGlobalPageCount] / (float)self.presenter.totalPagesCount
-                     animated:YES];
+    float sliderPosition = [self.presenter calculateSliderPosition];
+    [self.pageSlider setValue:sliderPosition animated:YES];
 }
 
 - (NSUInteger)currentSliderPage {
@@ -322,9 +304,9 @@
     __block NSUInteger pageIndex = 0;
     
     [self.loadedEpub.spineArray enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
-        pageSum += [currentChapter pageCount];
+        pageSum += currentChapter.pageCount;
         if (pageSum >= targetPage) {
-            pageIndex = [currentChapter pageCount] - 1 - pageSum + targetPage;
+            pageIndex = currentChapter.pageCount - 1 - pageSum + targetPage;
             chapterIndex = idx;
             *stop = YES;
         }
@@ -378,7 +360,7 @@
 // Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     NSLog(@"shouldAutorotate");
-    [self updatePagination];
+    [self.presenter updatePagination];
 	return YES;
 }
 
@@ -396,6 +378,7 @@
     [super awakeFromNib];
     
     self.presenter = [ReaderPresenter new];
+    self.presenter.renderer = self;
     
 }
 
