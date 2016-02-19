@@ -43,10 +43,6 @@
 
 #pragma mark - EpubReader
 
-- (id<ChapterDelegate>)chapterDelegate {
-    return self;
-}
-
 - (void)updateCurrentPageLabel:(NSString *)text {
     self.currentPageLabel.text = text;
 }
@@ -81,21 +77,6 @@
 #pragma mark -
 #pragma mark ChapterDelegate
 
-- (void)chapterDidFinishLoad:(Chapter *)chapter{
-    self.presenter.totalPagesCount += chapter.pageCount;
-
-	if (chapter.chapterIndex + 1 < [self.loadedEpub.spineArray count]) {
-        Chapter *currentChapter = self.loadedEpub.spineArray[chapter.chapterIndex + 1];
-        [currentChapter load:self.webView.bounds fontPercentSize:self.presenter.currentTextSize delegate:self];
-		[self setPageLabelForAmountOnly];
-	} else {
-		[self setPageLabelForAmountAndIndex];
-        [self updateSliderValue];
-		self.presenter.paginating = NO;
-		NSLog(@"Pagination Ended!");
-	}
-}
-
 #pragma mark -
 #pragma mark Spine
 
@@ -117,7 +98,7 @@
 	self.presenter.currentSpineIndex = spineIndex;
 	
     if (!self.presenter.paginating){
-        [self setPageLabelForAmountAndIndex];
+        [self updateCurrentPageLabel:self.presenter.pageTextForAmountAndIndex];
         [self updateSliderValue];
 	}
 }
@@ -189,14 +170,6 @@
 
 #pragma mark -
 #pragma mark Page Label
-
-- (void)setPageLabelForAmountOnly {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"?/%ld", self.presenter.totalPagesCount]];
-}
-
-- (void)setPageLabelForAmountAndIndex {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self.presenter globalPageCount], self.presenter.totalPagesCount]];
-}
 
 #pragma mark -
 #pragma mark Pagination

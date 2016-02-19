@@ -10,12 +10,15 @@ import Foundation
 import UIKit
 
 @objc protocol EpubRenderer: NSObjectProtocol {
+    // State
     func webviewFrame() -> CGRect
+    
+    // Update
     func updateCurrentPageLabel(text: String)
-    func chapterDelegate() -> ChapterDelegate
+    func updateSliderValue()
 }
 
-class ReaderPresenter: NSObject {
+class ReaderPresenter: NSObject, ChapterDelegate {
     var epubLoaded = false
     var paginating = false
     
@@ -61,29 +64,43 @@ class ReaderPresenter: NSObject {
             
             if let chapter = loadedEpub!.spineArray.first as? Chapter, epubRenderer = renderer {
                 let frame = epubRenderer.webviewFrame()
-                let delegate = epubRenderer.chapterDelegate()
-                chapter.load(frame, fontPercentSize:currentTextSize, delegate: delegate)
-                epubRenderer.updateCurrentPageLabel("?/?")
+                chapter.load(frame, fontPercentSize:currentTextSize, delegate:self)
+                epubRenderer.updateCurrentPageLabel(pageTextForUndefinedState)
             }
             
         }
     }
+    
+    // MARK: ChapterDelegate
+    
+    func chapterDidFinishLoad(chapter: Chapter) {
+        totalPagesCount += chapter.pageCount;
+        
+        if let aliveEpub = loadedEpub, aliveRenderer = renderer {
+            if (chapter.chapterIndex + 1 < aliveEpub.spineArray.count) {
+                if let currentChapter = aliveEpub.spineArray[chapter.chapterIndex + 1] as? Chapter {
+                    currentChapter.load(aliveRenderer.webviewFrame(), fontPercentSize:currentTextSize, delegate:self)
+                    aliveRenderer.updateCurrentPageLabel(pageTextForAmountOnly)
+                }
+            } else {
+                aliveRenderer.updateCurrentPageLabel(pageTextForAmountAndIndex)
+                aliveRenderer.updateSliderValue()
+                paginating = false
+                
+                print("Pagination Ended!");
+            }
+        }
+    }
+    
+    var pageTextForUndefinedState: String {
+        return "?/?"
+    }
+    
+    var pageTextForAmountOnly: String {
+        return String(format:"?/%ld", totalPagesCount);
+    }
+    
+    var pageTextForAmountAndIndex: String {
+        return String(format:"%ld/%ld", globalPageCount(), totalPagesCount);
+    }
 }
-
-/*
-- (NSUInteger)getGlobalPageCount{
-__block NSUInteger pageCount = 0;
-
-[self.loadedEpub.spineArray enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
-if (idx < self.presenter.currentSpineIndex) {
-pageCount += [currentChapter pageCount];
-}
-else {
-*stop = YES;
-}
-}];
-
-pageCount += self.presenter.currentPageInSpineIndex + 1;
-return pageCount;
-}
-*/
