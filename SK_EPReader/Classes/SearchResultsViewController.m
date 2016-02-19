@@ -71,10 +71,10 @@
     }
     
     if(hitCount!=0){
-        UIWebView* webView = [[UIWebView alloc] initWithFrame:chapter.windowSize];
-        [webView setDelegate:self];
-        NSURLRequest* urlRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:chapter.spinePath]];
-        [webView loadRequest:urlRequest];   
+//        UIWebView* webView = [[UIWebView alloc] initWithFrame:chapter.windowSize];
+//        [webView setDelegate:self];
+//        NSURLRequest* urlRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:chapter.spinePath]];
+//        [webView loadRequest:urlRequest];   
     } else {
         if((currentChapterIndex+1)<[epubViewController.loadedEpub.spineArray count]){
             [self searchString:currentQuery inChapterAtIndex:(currentChapterIndex+1)];
@@ -104,7 +104,7 @@
 	
 	NSString *insertRule1 = [NSString stringWithFormat:@"addCSSRule('html', 'padding: 0px; height: %fpx; -webkit-column-gap: 0px; -webkit-column-width: %fpx;')", webView.frame.size.height, webView.frame.size.width];
 	NSString *insertRule2 = [NSString stringWithFormat:@"addCSSRule('p', 'text-align: justify;')"];
-	NSString *setTextSizeRule = [NSString stringWithFormat:@"addCSSRule('body', '-webkit-text-size-adjust: %d%%;')",[[epubViewController.loadedEpub.spineArray objectAtIndex:currentChapterIndex] fontPercentSize]];
+//	NSString *setTextSizeRule = [NSString stringWithFormat:@"addCSSRule('body', '-webkit-text-size-adjust: %d%%;')",[[epubViewController.loadedEpub.spineArray objectAtIndex:currentChapterIndex] fontPercentSize]];
     
 	
 	[webView stringByEvaluatingJavaScriptFromString:varMySheet];
@@ -115,7 +115,7 @@
 	
 	[webView stringByEvaluatingJavaScriptFromString:insertRule2];
 	
-    [webView stringByEvaluatingJavaScriptFromString:setTextSizeRule];
+//    [webView stringByEvaluatingJavaScriptFromString:setTextSizeRule];
     
     [webView highlightAllOccurencesOfString:currentQuery];
     

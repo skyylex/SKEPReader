@@ -37,6 +37,7 @@
 		422CA5F81A587FB100F60A5F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5EC1A587C4A00F60A5F /* CoreGraphics.framework */; };
 		422CA5FA1A5880D600F60A5F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5F91A5880D600F60A5F /* libz.dylib */; };
 		4240D9911C772C090002AD29 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4240D9901C772C090002AD29 /* Chapter.swift */; };
+		4240D9951C7740B50002AD29 /* PageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4240D9941C7740B50002AD29 /* PageCalculator.swift */; };
 		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
 		5B60A90DCCE0AE09A6AB8020 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F819356432995F2000CDA8 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -93,6 +94,7 @@
 		422CA5F91A5880D600F60A5F /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4240D9901C772C090002AD29 /* Chapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
 		4240D9931C772C930002AD29 /* SK_EPReader-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SK_EPReader-Bridging-Header.h"; sourceTree = "<group>"; };
+		4240D9941C7740B50002AD29 /* PageCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageCalculator.swift; sourceTree = "<group>"; };
 		42FB6B441B014653001CFBCC /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		8C632C0D8AEB52B0FADC2C0F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -199,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				4240D9931C772C930002AD29 /* SK_EPReader-Bridging-Header.h */,
+				4240D9941C7740B50002AD29 /* PageCalculator.swift */,
 				4240D9901C772C090002AD29 /* Chapter.swift */,
 				42E242811B0207D1002AEB6F /* Support */,
 				422CA5AF1A587AF100F60A5F /* ChapterListViewController.h */,
@@ -477,6 +480,7 @@
 				422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */,
 				422CA5501A587A8300F60A5F /* main.m in Sources */,
 				422CA5E41A587AF100F60A5F /* UIWebView+SearchWebView.m in Sources */,
+				4240D9951C7740B50002AD29 /* PageCalculator.swift in Sources */,
 				422CA5DA1A587AF100F60A5F /* EPubViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

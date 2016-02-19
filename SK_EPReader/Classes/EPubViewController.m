@@ -57,8 +57,7 @@
 
 	if (chapter.chapterIndex + 1 < [self.loadedEpub.spineArray count]) {
         Chapter *currentChapter = self.loadedEpub.spineArray[chapter.chapterIndex + 1];
-		[currentChapter setDelegate:self];
-        [currentChapter load:self.webView.bounds fontPercentSize:currentTextSize];
+        [currentChapter load:self.webView.bounds fontPercentSize:currentTextSize delegate:self];
 		[self setPageLabelForAmountOnly];
 	} else {
 		[self setPageLabelForAmountAndIndex];
@@ -200,8 +199,7 @@
             
             Chapter *chapter = self.loadedEpub.spineArray[0];
             
-            [chapter setDelegate:self];
-            [chapter load:self.webView.bounds fontPercentSize:currentTextSize];
+            [chapter load:self.webView.bounds fontPercentSize:currentTextSize delegate:self];
             [self.currentPageLabel setText:@"?/?"];
         }
     }
