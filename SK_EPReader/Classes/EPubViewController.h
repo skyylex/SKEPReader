@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "ZipArchive.h"
 #import "EPub.h"
-#import "Chapter.h"
 #import "WYPopoverController.h"
+#import "SK_EPReader-Swift.h"
 
 @class SearchResultsViewController;
 @class SearchResult;

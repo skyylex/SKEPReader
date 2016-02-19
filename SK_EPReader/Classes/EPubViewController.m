@@ -11,7 +11,7 @@
 #import "SearchResultsViewController.h"
 #import "SearchResult.h"
 #import "UIWebView+SearchWebView.h"
-#import "Chapter.h"
+#import "SK_EPReader-Swift.h"
 
 #define kMinTextSize 50
 #define kMaxTextSize 200
@@ -58,8 +58,7 @@
 	if (chapter.chapterIndex + 1 < [self.loadedEpub.spineArray count]) {
         Chapter *currentChapter = self.loadedEpub.spineArray[chapter.chapterIndex + 1];
 		[currentChapter setDelegate:self];
-		[currentChapter loadChapterWithWindowSize:self.webView.bounds
-                                  fontPercentSize:currentTextSize];
+        [currentChapter load:self.webView.bounds fontPercentSize:currentTextSize];
 		[self setPageLabelForAmountOnly];
 	} else {
 		[self setPageLabelForAmountAndIndex];
@@ -202,8 +201,7 @@
             Chapter *chapter = self.loadedEpub.spineArray[0];
             
             [chapter setDelegate:self];
-            [chapter loadChapterWithWindowSize:self.webView.bounds
-                               fontPercentSize:currentTextSize];
+            [chapter load:self.webView.bounds fontPercentSize:currentTextSize];
             [self.currentPageLabel setText:@"?/?"];
         }
     }

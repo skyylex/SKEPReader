@@ -8,9 +8,9 @@
 
 #import "EPub.h"
 #import "ZipArchive.h"
-#import "Chapter.h"
 #import "SKFileSystemSupport.h"
 #import <KSCrypto/KSSHA1Stream.h>
+#import "SK_EPReader-Swift.h"
 
 static NSString * const kMediaTypeKey = @"media-type";
 static NSString * const kHrefTypeKey = @"href";
@@ -166,10 +166,9 @@ static NSString * const kOPFItemKey = @"//opf:item";
     int count = 0;
 	for (CXMLElement *element in itemRefsArray) {
         NSString *chapHref = [itemDictionary valueForKey:[[element attributeForName:kIDRefKey] stringValue]];
-        
-        Chapter *tmpChapter = [[Chapter alloc] initWithPath:[NSString stringWithFormat:@"%@%@", ebookBasePath, chapHref]
-                                                      title:[titleDictionary valueForKey:chapHref]
-                                               chapterIndex:count++];
+        NSString *spinePath = [NSString stringWithFormat:@"%@%@", ebookBasePath, chapHref];
+        NSString *title = [titleDictionary valueForKey:chapHref];
+        Chapter *tmpChapter = [[Chapter alloc] initWithSpinePath:spinePath title:title chapterIndex:count++];
 		[tmpArray addObject:tmpChapter];
 	}
 	

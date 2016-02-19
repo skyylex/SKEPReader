@@ -25,7 +25,6 @@
 		422CA5A61A587AC900F60A5F /* orangeslide.png in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A11A587AC900F60A5F /* orangeslide.png */; };
 		422CA5A71A587AC900F60A5F /* SearchWebView.js in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A21A587AC900F60A5F /* SearchWebView.js */; };
 		422CA5A91A587AC900F60A5F /* yellowslide.png in Resources */ = {isa = PBXBuildFile; fileRef = 422CA5A41A587AC900F60A5F /* yellowslide.png */; };
-		422CA5D51A587AF100F60A5F /* Chapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5AE1A587AF100F60A5F /* Chapter.m */; };
 		422CA5D61A587AF100F60A5F /* ChapterListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B01A587AF100F60A5F /* ChapterListViewController.m */; };
 		422CA5D81A587AF100F60A5F /* EPub.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B31A587AF100F60A5F /* EPub.m */; };
 		422CA5DA1A587AF100F60A5F /* EPubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5B61A587AF100F60A5F /* EPubViewController.m */; };
@@ -37,6 +36,7 @@
 		422CA5F71A587FA700F60A5F /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5EA1A587C3300F60A5F /* libxml2.dylib */; };
 		422CA5F81A587FB100F60A5F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5EC1A587C4A00F60A5F /* CoreGraphics.framework */; };
 		422CA5FA1A5880D600F60A5F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5F91A5880D600F60A5F /* libz.dylib */; };
+		4240D9911C772C090002AD29 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4240D9901C772C090002AD29 /* Chapter.swift */; };
 		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
 		5B60A90DCCE0AE09A6AB8020 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F819356432995F2000CDA8 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -74,8 +74,6 @@
 		422CA5A11A587AC900F60A5F /* orangeslide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = orangeslide.png; sourceTree = "<group>"; };
 		422CA5A21A587AC900F60A5F /* SearchWebView.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = SearchWebView.js; sourceTree = "<group>"; };
 		422CA5A41A587AC900F60A5F /* yellowslide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yellowslide.png; sourceTree = "<group>"; };
-		422CA5AD1A587AF100F60A5F /* Chapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chapter.h; sourceTree = "<group>"; };
-		422CA5AE1A587AF100F60A5F /* Chapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chapter.m; sourceTree = "<group>"; };
 		422CA5AF1A587AF100F60A5F /* ChapterListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterListViewController.h; sourceTree = "<group>"; };
 		422CA5B01A587AF100F60A5F /* ChapterListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChapterListViewController.m; sourceTree = "<group>"; };
 		422CA5B21A587AF100F60A5F /* EPub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPub.h; sourceTree = "<group>"; };
@@ -93,6 +91,8 @@
 		422CA5EE1A587C5100F60A5F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		422CA5F01A587C6F00F60A5F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		422CA5F91A5880D600F60A5F /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4240D9901C772C090002AD29 /* Chapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
+		4240D9931C772C930002AD29 /* SK_EPReader-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SK_EPReader-Bridging-Header.h"; sourceTree = "<group>"; };
 		42FB6B441B014653001CFBCC /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		8C632C0D8AEB52B0FADC2C0F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -136,10 +136,10 @@
 			isa = PBXGroup;
 			children = (
 				42FB6B461B0147B5001CFBCC /* SK_EPReaderSample */,
-				422CA5F41A587F6A00F60A5F /* Frameworks */,
 				422CA54C1A587A8300F60A5F /* SK_EPReader */,
 				422CA5661A587A8300F60A5F /* SK_EPReaderTests */,
 				422CA54B1A587A8300F60A5F /* Products */,
+				422CA5F41A587F6A00F60A5F /* Frameworks */,
 				94EA425CA53AD2120EC84F34 /* Pods */,
 			);
 			sourceTree = "<group>";
@@ -198,9 +198,9 @@
 		422CA5AA1A587AF100F60A5F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				4240D9931C772C930002AD29 /* SK_EPReader-Bridging-Header.h */,
+				4240D9901C772C090002AD29 /* Chapter.swift */,
 				42E242811B0207D1002AEB6F /* Support */,
-				422CA5AD1A587AF100F60A5F /* Chapter.h */,
-				422CA5AE1A587AF100F60A5F /* Chapter.m */,
 				422CA5AF1A587AF100F60A5F /* ChapterListViewController.h */,
 				422CA5B01A587AF100F60A5F /* ChapterListViewController.m */,
 				422CA5B21A587AF100F60A5F /* EPub.h */,
@@ -272,6 +272,7 @@
 				422CA5471A587A8300F60A5F /* Frameworks */,
 				422CA5481A587A8300F60A5F /* Resources */,
 				B19F52CDE3DD48F2C771C128 /* Copy Pods Resources */,
+				B1EF34C845E89A3649775AAD /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -291,6 +292,7 @@
 				422CA5601A587A8300F60A5F /* Frameworks */,
 				422CA5611A587A8300F60A5F /* Resources */,
 				F87D53FF6C6C844304A67887 /* Copy Pods Resources */,
+				88E0ACCF614BEF0ADFDB9B9E /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -368,6 +370,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		88E0ACCF614BEF0ADFDB9B9E /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		9D330003230D1D6846C10FEE /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -396,6 +413,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B1EF34C845E89A3649775AAD /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BEFE500061BF8836154F702E /* Check Pods Manifest.lock */ = {
@@ -438,8 +470,8 @@
 				422CA5D81A587AF100F60A5F /* EPub.m in Sources */,
 				421A96941B023106005CF8C5 /* SKBookListTableController.m in Sources */,
 				421A968F1B020878005CF8C5 /* SKFileSystemSupport.m in Sources */,
+				4240D9911C772C090002AD29 /* Chapter.swift in Sources */,
 				422CA5531A587A8300F60A5F /* AppDelegate.m in Sources */,
-				422CA5D51A587AF100F60A5F /* Chapter.m in Sources */,
 				422CA5D61A587AF100F60A5F /* ChapterListViewController.m in Sources */,
 				422CA5E11A587AF100F60A5F /* SearchResult.m in Sources */,
 				422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */,
@@ -577,7 +609,7 @@
 					"$(SDKROOT)/usr/include/libxml2/**",
 				);
 				INFOPLIST_FILE = SK_EPReader/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"/usr/include/libxml2/**",
@@ -608,7 +640,7 @@
 					"$(SDKROOT)/usr/include/libxml2/**",
 				);
 				INFOPLIST_FILE = SK_EPReader/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"/usr/include/libxml2/**",
