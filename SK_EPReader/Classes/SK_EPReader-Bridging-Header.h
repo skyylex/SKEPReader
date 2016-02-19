@@ -9,6 +9,6 @@
 #ifndef SK_EPReader_Bridging_Header_h
 #define SK_EPReader_Bridging_Header_h
 
-
+#import "EPub.h"
 
 #endif /* SK_EPReader_Bridging_Header_h */
