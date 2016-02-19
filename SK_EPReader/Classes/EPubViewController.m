@@ -19,14 +19,18 @@
 
 @interface EPubViewController()
 
-- (void)gotoNextSpine;
-- (void)gotoPrevSpine;
-- (void)gotoNextPage;
-- (void)gotoPrevPage;
-- (NSUInteger)getGlobalPageCount;
-- (void)gotoPageInCurrentSpine:(NSUInteger)pageIndex;
-- (void)updatePagination;
-- (void)loadSpine:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex;
+@property (nonatomic, assign) NSUInteger currentSpineIndex;
+@property (nonatomic, assign) NSUInteger currentPageInSpineIndex;
+@property (nonatomic, assign) NSUInteger pagesInCurrentSpineCount;
+@property (nonatomic, assign) NSUInteger currentTextSize;
+@property (nonatomic, assign) NSUInteger totalPagesCount;
+
+@property (nonatomic, strong) WYPopoverController *chaptersPopover;
+@property (nonatomic, strong) WYPopoverController *searchResultsPopover;
+
+@property (nonatomic, strong) SearchResultsViewController* searchResViewController;
+
+@property (nonatomic, strong) ReaderPresenter *presenter;
 
 @end
 
@@ -35,10 +39,10 @@
 #pragma mark -
 
 - (void)loadEpub:(NSURL *)epubURL{
-    currentSpineIndex = 0;
-    currentPageInSpineIndex = 0;
-    pagesInCurrentSpineCount = 0;
-    totalPagesCount = 0;
+    self.currentSpineIndex = 0;
+    self.currentPageInSpineIndex = 0;
+    self.pagesInCurrentSpineCount = 0;
+    self.totalPagesCount = 0;
 	self.searching = NO;
     
     self.epubLoaded = NO;
@@ -53,11 +57,11 @@
 #pragma mark ChapterDelegate
 
 - (void)chapterDidFinishLoad:(Chapter *)chapter{
-    totalPagesCount += chapter.pageCount;
+    self.totalPagesCount += chapter.pageCount;
 
 	if (chapter.chapterIndex + 1 < [self.loadedEpub.spineArray count]) {
         Chapter *currentChapter = self.loadedEpub.spineArray[chapter.chapterIndex + 1];
-        [currentChapter load:self.webView.bounds fontPercentSize:currentTextSize delegate:self];
+        [currentChapter load:self.webView.bounds fontPercentSize:self.currentTextSize delegate:self];
 		[self setPageLabelForAmountOnly];
 	} else {
 		[self setPageLabelForAmountAndIndex];
@@ -78,14 +82,14 @@
 	self.webView.hidden = YES;
 	self.currentSearchResult = theResult;
 
-	[chaptersPopover dismissPopoverAnimated:YES];
-	[searchResultsPopover dismissPopoverAnimated:YES];
+	[self.chaptersPopover dismissPopoverAnimated:YES];
+	[self.searchResultsPopover dismissPopoverAnimated:YES];
 	
 	NSURL *url = [NSURL fileURLWithPath:[[self.loadedEpub.spineArray objectAtIndex:spineIndex] spinePath]];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 	
-    currentPageInSpineIndex = pageIndex;
-	currentSpineIndex = spineIndex;
+    self.currentPageInSpineIndex = pageIndex;
+	self.currentSpineIndex = spineIndex;
 	
     if (!self.paginating){
         [self setPageLabelForAmountAndIndex];
@@ -98,9 +102,9 @@
 #pragma mark Navigation
 
 - (void)gotoPageInCurrentSpine:(NSUInteger)pageIndex {
-	if (pageIndex >= pagesInCurrentSpineCount){
-		pageIndex = pagesInCurrentSpineCount - 1;
-		currentPageInSpineIndex = pagesInCurrentSpineCount - 1;	
+	if (pageIndex >= self.pagesInCurrentSpineCount){
+		pageIndex = self.pagesInCurrentSpineCount - 1;
+		self.currentPageInSpineIndex = self.pagesInCurrentSpineCount - 1;
 	}
 	
 	float pageOffset = pageIndex * self.webView.bounds.size.width;
@@ -120,24 +124,24 @@
 
 - (void)gotoNextSpine {
 	if (!self.paginating) {
-		if (currentSpineIndex + 1 < [self.loadedEpub.spineArray count]) {
-			[self loadSpine:++currentSpineIndex atPageIndex:0];
+		if (self.currentSpineIndex + 1 < [self.loadedEpub.spineArray count]) {
+			[self loadSpine:++self.currentSpineIndex atPageIndex:0];
 		}	
 	}
 }
 
 - (void)gotoPrevSpine {
 	if (!self.paginating){
-		if ((int)(currentSpineIndex - 1) >= 0){
-			[self loadSpine:--currentSpineIndex atPageIndex:0];
+		if ((int)(self.currentSpineIndex - 1) >= 0){
+			[self loadSpine:--self.currentSpineIndex atPageIndex:0];
 		}	
 	}
 }
 
 - (void)gotoNextPage {
 	if (!self.paginating){
-		if(currentPageInSpineIndex+1<pagesInCurrentSpineCount){
-			[self gotoPageInCurrentSpine:++currentPageInSpineIndex];
+		if(self.currentPageInSpineIndex + 1 < self.pagesInCurrentSpineCount){
+			[self gotoPageInCurrentSpine:++self.currentPageInSpineIndex];
 		} else {
 			[self gotoNextSpine];
 		}		
@@ -146,13 +150,13 @@
 
 - (void)gotoPrevPage {
 	if (!self.paginating) {
-		if ((int)(currentSpineIndex - 1) >= 0){
-			[self gotoPageInCurrentSpine:--currentPageInSpineIndex];
+		if ((int)(self.currentSpineIndex - 1) >= 0){
+			[self gotoPageInCurrentSpine:--self.currentPageInSpineIndex];
 		} else {
-			if (currentSpineIndex != 0){
-                Chapter *currentChapter = self.loadedEpub.spineArray[currentSpineIndex - 1];
+			if (self.currentSpineIndex != 0){
+                Chapter *currentChapter = self.loadedEpub.spineArray[self.currentSpineIndex - 1];
 				NSUInteger targetPage = [currentChapter pageCount];
-				[self loadSpine:--currentSpineIndex atPageIndex:targetPage - 1];
+				[self loadSpine:--self.currentSpineIndex atPageIndex:targetPage - 1];
 			}
 		}
 	}
@@ -162,11 +166,11 @@
 #pragma mark Page Label
 
 - (void)setPageLabelForAmountOnly {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"?/%ld", totalPagesCount]];
+    [self.currentPageLabel setText:[NSString stringWithFormat:@"?/%ld", self.totalPagesCount]];
 }
 
 - (void)setPageLabelForAmountAndIndex {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self getGlobalPageCount], totalPagesCount]];
+    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self getGlobalPageCount], self.totalPagesCount]];
 }
 
 #pragma mark -
@@ -176,7 +180,7 @@
     __block NSUInteger pageCount = 0;
     
     [self.loadedEpub.spineArray enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
-        if (idx < currentSpineIndex) {
+        if (idx < self.currentSpineIndex) {
             pageCount += [currentChapter pageCount];
         }
         else {
@@ -184,7 +188,7 @@
         }
     }];
     
-    pageCount += currentPageInSpineIndex + 1;
+    pageCount += self.currentPageInSpineIndex + 1;
     return pageCount;
 }
 
@@ -193,13 +197,13 @@
         if (!self.paginating){
             NSLog(@"Pagination Started!");
             self.paginating = YES;
-            totalPagesCount = 0;
+            self.totalPagesCount = 0;
             
-            [self loadSpine:currentSpineIndex atPageIndex:currentPageInSpineIndex];
+            [self loadSpine:self.currentSpineIndex atPageIndex:self.currentPageInSpineIndex];
             
             Chapter *chapter = self.loadedEpub.spineArray[0];
             
-            [chapter load:self.webView.bounds fontPercentSize:currentTextSize delegate:self];
+            [chapter load:self.webView.bounds fontPercentSize:self.currentTextSize delegate:self];
             [self.currentPageLabel setText:@"?/?"];
         }
     }
@@ -210,10 +214,10 @@
 
 - (IBAction)increaseTextSizeClicked:(id)sender{
 	if (!self.paginating){
-		if (currentTextSize + kChangeTextStep <= kMaxTextSize){
-			currentTextSize += kChangeTextStep;
+		if (self.currentTextSize + kChangeTextStep <= kMaxTextSize){
+			self.currentTextSize += kChangeTextStep;
 			[self updatePagination];
-			if (currentTextSize == kMaxTextSize){
+			if (self.currentTextSize == kMaxTextSize){
 				[self.incTextSizeButton setEnabled:NO];
 			}
 			[self.decTextSizeButton setEnabled:YES];
@@ -222,11 +226,11 @@
 }
 - (IBAction)decreaseTextSizeClicked:(id)sender {
 	if (!self.paginating){
-		if (currentTextSize - kChangeTextStep >= kMinTextSize) {
-			currentTextSize -= kChangeTextStep;
+		if (self.currentTextSize - kChangeTextStep >= kMinTextSize) {
+			self.currentTextSize -= kChangeTextStep;
 			[self updatePagination];
 			
-            if (currentTextSize == kMinTextSize) {
+            if (self.currentTextSize == kMinTextSize) {
 				[self.decTextSizeButton setEnabled:NO];
 			}
             
@@ -236,12 +240,12 @@
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-    if (!searchResultsPopover) {
-        searchResultsPopover = [[WYPopoverController alloc] initWithContentViewController:searchResViewController];
-        [searchResultsPopover setPopoverContentSize:CGSizeMake(400, 600)];
+    if (!self.searchResultsPopover) {
+        self.searchResultsPopover = [[WYPopoverController alloc] initWithContentViewController:self.searchResViewController];
+        [self.searchResultsPopover setPopoverContentSize:CGSizeMake(400, 600)];
     }
-    if (![searchResultsPopover isPopoverVisible]) {
-        [searchResultsPopover presentPopoverFromRect:searchBar.bounds
+    if (![self.searchResultsPopover isPopoverVisible]) {
+        [self.searchResultsPopover presentPopoverFromRect:searchBar.bounds
                                               inView:searchBar
                             permittedArrowDirections:WYPopoverArrowDirectionAny
                                             animated:YES];
@@ -249,23 +253,23 @@
     
     if (!self.searching){
         self.searching = YES;
-        [searchResViewController searchString:[searchBar text]];
+        [self.searchResViewController searchString:[searchBar text]];
         [searchBar resignFirstResponder];
     }
 }
 
 - (IBAction)showChapterIndex:(id)sender {
-    if (!chaptersPopover) {
+    if (!self.chaptersPopover) {
         ChapterListViewController *chapterListView = [ChapterListViewController new];
         [chapterListView setEpubViewController:self];
-        chaptersPopover = [[WYPopoverController alloc] initWithContentViewController:chapterListView];
-        [chaptersPopover setPopoverContentSize:CGSizeMake(400, 600)];
+        self.chaptersPopover = [[WYPopoverController alloc] initWithContentViewController:chapterListView];
+        [self.chaptersPopover setPopoverContentSize:CGSizeMake(400, 600)];
     }
-    if ([chaptersPopover isPopoverVisible]) {
-        [chaptersPopover dismissPopoverAnimated:YES];
+    if ([self.chaptersPopover isPopoverVisible]) {
+        [self.chaptersPopover dismissPopoverAnimated:YES];
     }
     else {
-        [chaptersPopover presentPopoverFromBarButtonItem:self.chapterListButton
+        [self.chaptersPopover presentPopoverFromBarButtonItem:self.chapterListButton
                                 permittedArrowDirections:WYPopoverArrowDirectionAny
                                                 animated:YES];
     }
@@ -276,12 +280,12 @@
 #pragma mark Slider
 
 - (void)updateSliderValue {
-    [self.pageSlider setValue:100.0 * (float)[self getGlobalPageCount] / (float)totalPagesCount
+    [self.pageSlider setValue:100.0 * (float)[self getGlobalPageCount] / (float)self.totalPagesCount
                      animated:YES];
 }
 
 - (NSUInteger)currentSliderPage {
-    NSUInteger currentSliderPage = (NSUInteger)((self.pageSlider.value / 100.0) * (float)totalPagesCount);
+    NSUInteger currentSliderPage = (NSUInteger)((self.pageSlider.value / 100.0) * (float)self.totalPagesCount);
     return currentSliderPage;
 }
 
@@ -291,7 +295,7 @@
         targetPage++;
     }
     
-	[self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", targetPage, totalPagesCount]];
+	[self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", targetPage, self.totalPagesCount]];
 }
 
 - (IBAction)slidingEnded:(id)sender {
@@ -334,7 +338,7 @@
     
     NSString *insertRule1 = [NSString stringWithFormat:@"addCSSRule('html', 'padding: 0px; height: %fpx; -webkit-column-gap: 0px; -webkit-column-width: %fpx;')", self.webView.frame.size.height, self.webView.frame.size.width];
     NSString *insertRule2 = [NSString stringWithFormat:@"addCSSRule('p', 'text-align: justify;')"];
-    NSString *setTextSizeRule = [NSString stringWithFormat:@"addCSSRule('body', '-webkit-text-size-adjust: %d%%;')", currentTextSize];
+    NSString *setTextSizeRule = [NSString stringWithFormat:@"addCSSRule('body', '-webkit-text-size-adjust: %d%%;')", self.currentTextSize];
     NSString *setHighlightColorRule = [NSString stringWithFormat:@"addCSSRule('highlight', 'background-color: yellow;')"];
     
     
@@ -350,9 +354,9 @@
     }
     
     float totalWidth = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] floatValue];
-    pagesInCurrentSpineCount = (NSUInteger)(totalWidth / self.webView.bounds.size.width);
+    self.pagesInCurrentSpineCount = (NSUInteger)(totalWidth / self.webView.bounds.size.width);
     
-    [self gotoPageInCurrentSpine:currentPageInSpineIndex];
+    [self gotoPageInCurrentSpine:self.currentPageInSpineIndex];
 }
 
 #pragma mark -
@@ -396,7 +400,7 @@
     
     [self connectGestures];
     
-    currentTextSize = 100;
+    self.currentTextSize = 100;
 }
 
 #pragma mark -

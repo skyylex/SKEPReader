@@ -17,19 +17,7 @@
 
 static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStoryboardId";
 
-@interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterDelegate, UISearchBarDelegate> {
-    
-    NSUInteger currentSpineIndex;
-	NSUInteger currentPageInSpineIndex;
-	NSUInteger pagesInCurrentSpineCount;
-	NSUInteger currentTextSize;
-	NSUInteger totalPagesCount;
-    
-    WYPopoverController *chaptersPopover;
-    WYPopoverController *searchResultsPopover;
-
-    SearchResultsViewController* searchResViewController;
-}
+@interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterDelegate, UISearchBarDelegate>
 
 - (IBAction)showChapterIndex:(id)sender;
 - (IBAction)increaseTextSizeClicked:(id)sender;

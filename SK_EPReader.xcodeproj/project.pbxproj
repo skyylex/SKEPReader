@@ -38,6 +38,7 @@
 		422CA5FA1A5880D600F60A5F /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 422CA5F91A5880D600F60A5F /* libz.dylib */; };
 		4240D9911C772C090002AD29 /* Chapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4240D9901C772C090002AD29 /* Chapter.swift */; };
 		4240D9951C7740B50002AD29 /* PageCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4240D9941C7740B50002AD29 /* PageCalculator.swift */; };
+		4262E9891C77BAE700123D3A /* ReaderPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4262E9881C77BAE700123D3A /* ReaderPresenter.swift */; };
 		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
 		5B60A90DCCE0AE09A6AB8020 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F819356432995F2000CDA8 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -95,6 +96,7 @@
 		4240D9901C772C090002AD29 /* Chapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chapter.swift; sourceTree = "<group>"; };
 		4240D9931C772C930002AD29 /* SK_EPReader-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SK_EPReader-Bridging-Header.h"; sourceTree = "<group>"; };
 		4240D9941C7740B50002AD29 /* PageCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageCalculator.swift; sourceTree = "<group>"; };
+		4262E9881C77BAE700123D3A /* ReaderPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderPresenter.swift; sourceTree = "<group>"; };
 		42FB6B441B014653001CFBCC /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		8C632C0D8AEB52B0FADC2C0F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -203,6 +205,7 @@
 				4240D9931C772C930002AD29 /* SK_EPReader-Bridging-Header.h */,
 				4240D9941C7740B50002AD29 /* PageCalculator.swift */,
 				4240D9901C772C090002AD29 /* Chapter.swift */,
+				4262E9881C77BAE700123D3A /* ReaderPresenter.swift */,
 				42E242811B0207D1002AEB6F /* Support */,
 				422CA5AF1A587AF100F60A5F /* ChapterListViewController.h */,
 				422CA5B01A587AF100F60A5F /* ChapterListViewController.m */,
@@ -470,6 +473,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4262E9891C77BAE700123D3A /* ReaderPresenter.swift in Sources */,
 				422CA5D81A587AF100F60A5F /* EPub.m in Sources */,
 				421A96941B023106005CF8C5 /* SKBookListTableController.m in Sources */,
 				421A968F1B020878005CF8C5 /* SKFileSystemSupport.m in Sources */,
