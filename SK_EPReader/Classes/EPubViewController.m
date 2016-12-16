@@ -12,12 +12,15 @@
 #import "SearchResult.h"
 #import "UIWebView+SearchWebView.h"
 #import "Chapter.h"
+#import "ChapterLoader.h"
 
 #define kMinTextSize 50
 #define kMaxTextSize 200
 #define kChangeTextStep 25
 
 @interface EPubViewController()
+
+@property (nonatomic, strong) ChapterLoader *loader;
 
 - (void)gotoNextSpine;
 - (void)gotoPrevSpine;
@@ -57,9 +60,11 @@
 
 	if (chapter.chapterIndex + 1 < [self.loadedEpub.spineArray count]) {
         Chapter *currentChapter = self.loadedEpub.spineArray[chapter.chapterIndex + 1];
-		[currentChapter setDelegate:self];
-		[currentChapter loadChapterWithWindowSize:self.webView.bounds
-                                  fontPercentSize:currentTextSize];
+        
+        self.loader = [[ChapterLoader alloc] initWithChapter:currentChapter];
+        self.loader.delegate = self;
+        [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:currentTextSize];
+
 		[self setPageLabelForAmountOnly];
 	} else {
 		[self setPageLabelForAmountAndIndex];
@@ -201,9 +206,10 @@
             
             Chapter *chapter = self.loadedEpub.spineArray[0];
             
-            [chapter setDelegate:self];
-            [chapter loadChapterWithWindowSize:self.webView.bounds
-                               fontPercentSize:currentTextSize];
+            self.loader = [[ChapterLoader alloc] initWithChapter:chapter];
+            self.loader.delegate = self;
+            [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:currentTextSize];
+            
             [self.currentPageLabel setText:@"?/?"];
         }
     }

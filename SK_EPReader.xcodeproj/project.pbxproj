@@ -32,6 +32,7 @@
 		422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5CA1A587AF100F60A5F /* SearchResultsViewController.m */; };
 		422CA5E41A587AF100F60A5F /* UIWebView+SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5CD1A587AF100F60A5F /* UIWebView+SearchWebView.m */; };
 		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
+		9466C8231E048F8600B11986 /* ChapterLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9466C8221E048F8600B11986 /* ChapterLoader.m */; };
 		F9BEFFBA4EA28656020ECB04 /* libPods-SK_EPReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2E89F6A8D1BBE811CCDAEB /* libPods-SK_EPReader.a */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,9 @@
 		5D2E89F6A8D1BBE811CCDAEB /* libPods-SK_EPReader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SK_EPReader.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E7F054F173EE6FBD3874366 /* Pods-SK_EPReader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SK_EPReader.release.xcconfig"; path = "Pods/Target Support Files/Pods-SK_EPReader/Pods-SK_EPReader.release.xcconfig"; sourceTree = "<group>"; };
 		8E8365411E46F81B1C9E7451 /* Pods-SK_EPReader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SK_EPReader.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SK_EPReader/Pods-SK_EPReader.debug.xcconfig"; sourceTree = "<group>"; };
+		9466C8211E048F8600B11986 /* ChapterLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterLoader.h; sourceTree = "<group>"; };
+		9466C8221E048F8600B11986 /* ChapterLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChapterLoader.m; sourceTree = "<group>"; };
+		9466C8241E04900400B11986 /* ChapterLoaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterLoaderDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +206,9 @@
 				422CA5CA1A587AF100F60A5F /* SearchResultsViewController.m */,
 				422CA5CC1A587AF100F60A5F /* UIWebView+SearchWebView.h */,
 				422CA5CD1A587AF100F60A5F /* UIWebView+SearchWebView.m */,
+				9466C8211E048F8600B11986 /* ChapterLoader.h */,
+				9466C8221E048F8600B11986 /* ChapterLoader.m */,
+				9466C8241E04900400B11986 /* ChapterLoaderDelegate.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -369,7 +376,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run \'pod install\' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		9A8E5FF3CA5FCA9FF238FD54 /* [CP] Copy Pods Resources */ = {
@@ -417,6 +424,7 @@
 				422CA5D61A587AF100F60A5F /* ChapterListViewController.m in Sources */,
 				422CA5E11A587AF100F60A5F /* SearchResult.m in Sources */,
 				422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */,
+				9466C8231E048F8600B11986 /* ChapterLoader.m in Sources */,
 				422CA5501A587A8300F60A5F /* main.m in Sources */,
 				422CA5E41A587AF100F60A5F /* UIWebView+SearchWebView.m in Sources */,
 				422CA5DA1A587AF100F60A5F /* EPubViewController.m in Sources */,

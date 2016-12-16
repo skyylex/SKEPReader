@@ -8,16 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
+#import "ChapterLoaderDelegate.h"
 
-@class Chapter;
-
-@protocol ChapterDelegate <NSObject>
-- (void)chapterDidFinishLoad:(Chapter *)chapter;
-@end
+@class ChapterLoader;
 
 @interface Chapter : NSObject <UIWebViewDelegate>
-
-@property (nonatomic, strong) id<ChapterDelegate> delegate;
 
 @property (nonatomic, assign) NSUInteger pageCount;
 @property (nonatomic, assign) NSUInteger chapterIndex;
@@ -32,8 +27,5 @@
 - (id)initWithPath:(NSString *)theSpinePath
              title:(NSString *)theTitle
       chapterIndex:(NSUInteger)theIndex;
-
-- (void)loadChapterWithWindowSize:(CGRect)theWindowSize
-                  fontPercentSize:(NSUInteger)theFontPercentSize;
 
 @end

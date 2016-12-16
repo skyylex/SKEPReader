@@ -17,7 +17,7 @@
 
 static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStoryboardId";
 
-@interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterDelegate, UISearchBarDelegate> {
+@interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterLoaderDelegate, UISearchBarDelegate> {
     
     NSUInteger currentSpineIndex;
 	NSUInteger currentPageInSpineIndex;
