@@ -1,6 +1,6 @@
 platform :ios, '7.0'
 
-link_with 'SK_EPReader', 'SK_EPReaderTests'
+target 'SK_EPReader' do
 
 pod 'TouchXML', '~> 0.1'
 pod 'WYPopoverController', '~> 0.3.7'
@@ -10,3 +10,4 @@ pod 'MWFeedParser', '~> 1.0.1'
 pod 'MBProgressHUD', '~> 0.9.1'
 pod 'KSCrypto', '~> 1.2.2'
 
+end
