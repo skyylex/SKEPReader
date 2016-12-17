@@ -33,6 +33,7 @@
 		422CA5E41A587AF100F60A5F /* UIWebView+SearchWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 422CA5CD1A587AF100F60A5F /* UIWebView+SearchWebView.m */; };
 		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
 		9466C8231E048F8600B11986 /* ChapterLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9466C8221E048F8600B11986 /* ChapterLoader.m */; };
+		9466C82A1E05303B00B11986 /* SKHashingSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 9466C8291E05303B00B11986 /* SKHashingSupport.m */; };
 		F9BEFFBA4EA28656020ECB04 /* libPods-SK_EPReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2E89F6A8D1BBE811CCDAEB /* libPods-SK_EPReader.a */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +95,8 @@
 		9466C8211E048F8600B11986 /* ChapterLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterLoader.h; sourceTree = "<group>"; };
 		9466C8221E048F8600B11986 /* ChapterLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChapterLoader.m; sourceTree = "<group>"; };
 		9466C8241E04900400B11986 /* ChapterLoaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterLoaderDelegate.h; sourceTree = "<group>"; };
+		9466C8281E05303B00B11986 /* SKHashingSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKHashingSupport.h; sourceTree = "<group>"; };
+		9466C8291E05303B00B11986 /* SKHashingSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKHashingSupport.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +235,8 @@
 			children = (
 				421A968D1B020878005CF8C5 /* SKFileSystemSupport.h */,
 				421A968E1B020878005CF8C5 /* SKFileSystemSupport.m */,
+				9466C8281E05303B00B11986 /* SKHashingSupport.h */,
+				9466C8291E05303B00B11986 /* SKHashingSupport.m */,
 			);
 			name = Support;
 			sourceTree = "<group>";
@@ -422,6 +427,7 @@
 				422CA5531A587A8300F60A5F /* AppDelegate.m in Sources */,
 				422CA5D51A587AF100F60A5F /* Chapter.m in Sources */,
 				422CA5D61A587AF100F60A5F /* ChapterListViewController.m in Sources */,
+				9466C82A1E05303B00B11986 /* SKHashingSupport.m in Sources */,
 				422CA5E11A587AF100F60A5F /* SearchResult.m in Sources */,
 				422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */,
 				9466C8231E048F8600B11986 /* ChapterLoader.m in Sources */,

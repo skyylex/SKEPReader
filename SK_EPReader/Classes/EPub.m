@@ -11,6 +11,7 @@
 #import "Chapter.h"
 #import "SKFileSystemSupport.h"
 #import <KSCrypto/KSSHA1Stream.h>
+#import "SKHashingSupport.h"
 
 static NSString * const kMediaTypeKey = @"media-type";
 static NSString * const kHrefTypeKey = @"href";
@@ -37,7 +38,13 @@ static NSString * const kOPFItemKey = @"//opf:item";
         
 		self.epubFilePath = path;
 		self.spineArray = [NSMutableArray array];
-        
+    
+        self.sha1 = [SKHashingSupport generateSHA1:self.epubFilePath];
+        NSString *applicationSupportDirectory = [SKFileSystemSupport applicationSupportDirectory];
+        self.unzippedBookDirectory = [applicationSupportDirectory stringByAppendingPathComponent:self.sha1];
+
+        // TODO: change the time of the call parseEpub.
+        //       to be able to return result and proccess it 
         [self parseEpub];
 	}
     
@@ -46,18 +53,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
 
 #pragma mark - Parsing
 
-- (NSString *)generateSHA1:(NSString *)filepath {
-    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:filepath];
-    NSAssert(fileExist, @"No file to calculate SHA1");
-    
-    NSData *epubData = [NSData dataWithContentsOfFile:filepath];
-    NSString *sha1 = [epubData ks_SHA1DigestString];
-    return sha1;
-}
-
 - (void)parseEpub {
-    self.sha1 = [self generateSHA1:self.epubFilePath];
-    
     BOOL result = [SKFileSystemSupport unzipEpub:self.epubFilePath
                                      toDirectory:self.unzippedBookDirectory];
     if (result == NO) {
@@ -152,18 +148,6 @@ static NSString * const kOPFItemKey = @"//opf:item";
 	}
 	
 	self.spineArray = [NSArray arrayWithArray:tmpArray];
-}
-
-#pragma mark - Getters
-
-- (NSString *)unzippedBookDirectory {
-    if (_unzippedBookDirectory == nil) {
-        NSString *applicationSupportDirectory = [SKFileSystemSupport applicationSupportDirectory];
-        _unzippedBookDirectory = [applicationSupportDirectory stringByAppendingPathComponent:self.sha1];
-        NSLog(@"_unzippedBookDirectory %@", _unzippedBookDirectory);
-    }
-    
-    return _unzippedBookDirectory;
 }
 
 
