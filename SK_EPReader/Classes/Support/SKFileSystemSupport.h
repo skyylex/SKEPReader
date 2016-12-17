@@ -10,10 +10,18 @@
 
 @interface SKFileSystemSupport : NSObject
 
+// Backup configuration
 + (BOOL)addSkipBackupAttributeToItemAtPath:(NSString *)filePathString;
 
-+ (void)createDirectoryIfNeeded:(NSString *)directoryPath;
+// Shortcuts for system paths
 + (NSString *)applicationSupportDirectory;
-+ (NSString *)saveFileURLDataToTheTempFolder:(NSString *)sourceURLString;
+
+// File system changes
++ (BOOL)removeFileSystemItem:(NSString *)item;
++ (void)createDirectoryIfNeeded:(NSString *)directoryPath;
++ (NSString *)saveFileToTemp:(NSString *)filepath;
+
+// Archiving
++ (BOOL)unzipEpub:(NSString *)filename toDirectory:(NSString *)directory;
 
 @end

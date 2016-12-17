@@ -57,39 +57,15 @@ static NSString * const kOPFItemKey = @"//opf:item";
 
 - (void)parseEpub {
     self.sha1 = [self generateSHA1:self.epubFilePath];
-	[self unzipAndSaveFileNamed:self.epubFilePath];
+    
+    BOOL result = [SKFileSystemSupport unzipEpub:self.epubFilePath
+                                     toDirectory:self.unzippedBookDirectory];
+    if (result == NO) {
+        // TODO: add error handling
+    }
     
 	NSString *opfPath = [self parseManifestFile];
 	[self parseOPF:opfPath];
-}
-
-- (void)unzipAndSaveFileNamed:(NSString *)fileName {
-	ZipArchive *zipArchive = [ZipArchive new];
-	if ([zipArchive UnzipOpenFile:self.epubFilePath]) {
-        
-		//Delete all the previous files
-		NSFileManager *filemanager = [[NSFileManager alloc] init];
-		if ([filemanager fileExistsAtPath:self.unzippedBookDirectory]) {
-			NSError *error;
-			[filemanager removeItemAtPath:self.unzippedBookDirectory error:&error];
-		}
-		
-        //start unzip
-		BOOL ret = [zipArchive UnzipFileTo:[NSString stringWithFormat:@"%@/", self.unzippedBookDirectory]
-                                 overWrite:YES];
-        [SKFileSystemSupport addSkipBackupAttributeToItemAtPath:self.unzippedBookDirectory];
-		if (NO == ret) {
-			// error handler here
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:@"Error while unzipping the epub"
-                                                           delegate:self
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-			[alert show];
-		}
-        
-		[zipArchive UnzipCloseFile];
-	}
 }
 
 - (NSString *)parseManifestFile {

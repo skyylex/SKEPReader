@@ -7,6 +7,7 @@
 //
 
 #import "SKFileSystemSupport.h"
+#import <ZipArchive/ZipArchive.h>
 #import <KSCrypto/KSSHA1Stream.h>
 
 @implementation SKFileSystemSupport
@@ -55,10 +56,10 @@
     return basePath;
 }
 
-+ (NSString *)saveFileURLDataToTheTempFolder:(NSString *)sourceURLString {
-    NSParameterAssert(sourceURLString != nil);
++ (NSString *)saveFileToTemp:(NSString *)filepath {
+    NSParameterAssert(filepath != nil);
     
-    NSURL *bookURL = [NSURL fileURLWithPath:sourceURLString];
+    NSURL *bookURL = [NSURL fileURLWithPath:filepath];
     NSData *bookData = [NSData dataWithContentsOfURL:bookURL];
     NSString *resultTempPath = nil;
     if (bookData) {
@@ -71,6 +72,38 @@
     }
     
     return resultTempPath;
+}
+
++ (BOOL)removeFileSystemItem:(NSString *)item {
+    NSFileManager *filemanager = [[NSFileManager alloc] init];
+    if ([filemanager fileExistsAtPath:item]) {
+        NSError *error = nil;
+        [filemanager removeItemAtPath:item error:&error];
+        
+        return true;
+    }
+    
+    return false;
+}
+
++ (BOOL)unzipEpub:(NSString *)filename toDirectory:(NSString *)directory {
+    ZipArchive *zipArchive = [ZipArchive new];
+    if ([zipArchive UnzipOpenFile:filename]) {
+        // Remove possible artefacts
+        [SKFileSystemSupport removeFileSystemItem:directory];
+        
+        BOOL result = [zipArchive UnzipFileTo:[NSString stringWithFormat:@"%@/", directory]
+                                    overWrite:YES];
+        
+        // According to default requirements in AppStore
+        [SKFileSystemSupport addSkipBackupAttributeToItemAtPath:directory];
+        
+        [zipArchive UnzipCloseFile];
+        
+        return result;
+    } else {
+        return NO;
+    }
 }
 
 @end

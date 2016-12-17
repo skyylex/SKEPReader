@@ -55,7 +55,7 @@ static NSString *const SKEpubExtension = @"epub";
     NSArray *sortedKeys = [self.bookInfoItems.allKeys sortedArrayUsingDescriptors:@[self.sortDescriptor]];
     NSString *urlString = [self.bookInfoItems objectForKey:sortedKeys[indexPath.row]];
     
-    NSString *epubFilePath = [SKFileSystemSupport saveFileURLDataToTheTempFolder:urlString];
+    NSString *epubFilePath = [SKFileSystemSupport saveFileToTemp:urlString];
     NSURL *epubURL = [NSURL fileURLWithPath:epubFilePath];
     
     EPubViewController *epubViewController = [self.storyboard instantiateViewControllerWithIdentifier:EPubViewControllerStoryboardId];
