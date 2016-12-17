@@ -60,22 +60,35 @@ static NSString * const kOPFItemKey = @"//opf:item";
         // TODO: add error handling
     }
     
-	NSString *opfPath = [self parseManifestFile];
+	NSString *opfPath = [self retrieveOPFFilePathWith:self.unzippedBookDirectory];
 	[self parseOPF:opfPath];
 }
 
-- (NSString *)parseManifestFile {
-	NSString *manifestFilePath = [NSString stringWithFormat:@"%@/META-INF/container.xml", self.unzippedBookDirectory];
-	NSFileManager *fileManager = [NSFileManager new];
-	if ([fileManager fileExistsAtPath:manifestFilePath]) {
-		//		NSLog(@"Valid epub");
-		CXMLDocument *manifestFile = [[CXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:manifestFilePath]
-                                                                         options:0
-                                                                           error:nil];
-		CXMLNode *opfPath = [manifestFile nodeForXPath:@"//@full-path[1]"
-                                                 error:nil];
+- (NSString *)buildManifestPathWith:(NSString *)unzippedPath {
+    NSAssert(unzippedPath != nil, @"No unzipped path to generate manifest path");
+    
+    NSString *manifestFilePath = [NSString stringWithFormat:@"%@/META-INF/container.xml", unzippedPath];
+    return manifestFilePath;
+}
 
-		return [NSString stringWithFormat:@"%@/%@", self.unzippedBookDirectory, [opfPath stringValue]];
+- (NSString *)retrieveOPFFilePathWith:(NSString *)unzippedPath {
+    NSString *manifestPath = [self buildManifestPathWith:unzippedPath];
+	NSFileManager *fileManager = [NSFileManager new];
+	if ([fileManager fileExistsAtPath:manifestPath]) {
+        NSURL *manifestURL = [NSURL fileURLWithPath:manifestPath];
+        NSError *manifestReadingError = nil;
+		CXMLDocument *manifestFile = [[CXMLDocument alloc] initWithContentsOfURL:manifestURL
+                                                                         options:0
+                                                                           error:&manifestReadingError];
+		// TODO: handle manifestReadingError
+        
+        NSError *opfReadingError = nil;
+        CXMLNode *opfPath = [manifestFile nodeForXPath:@"//@full-path[1]"
+                                                 error:&opfReadingError];
+        // TODO: handle opfReadingError
+        
+        NSString *opfRelativePath = opfPath.stringValue;
+        return [unzippedPath stringByAppendingPathComponent:opfRelativePath];
 	} else {
 		NSLog(@"ERROR: ePub not Valid");
 		return nil;
@@ -83,33 +96,33 @@ static NSString * const kOPFItemKey = @"//opf:item";
 }
 
 - (void)parseOPF:(NSString *)opfPath{
-	CXMLDocument *opfFile = [[CXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:opfPath]
+    NSURL *opfFileURL = [NSURL fileURLWithPath:opfPath];
+    NSError *opfReadingError = nil;
+	CXMLDocument *opfFile = [[CXMLDocument alloc] initWithContentsOfURL:opfFileURL
                                                                 options:0
-                                                                  error:nil];
-	NSArray* itemsArray = [opfFile nodesForXPath:kOPFItemKey
-                               namespaceMappings:[NSDictionary dictionaryWithObject:kIDPFKey
-                                                                             forKey:kOPFKey]
+                                                                  error:&opfReadingError];
+	NSArray *itemsArray = [opfFile nodesForXPath:kOPFItemKey
+                               namespaceMappings:@{kIDPFKey : kOPFKey}
                                            error:nil];
-    //	NSLog(@"itemsArray size: %d", [itemsArray count]);
     
     NSString *ncxFileName;
 	
     NSMutableDictionary* itemDictionary = [NSMutableDictionary dictionary];
 	for (CXMLElement *element in itemsArray) {
-		[itemDictionary setValue:[[element attributeForName:kHrefTypeKey] stringValue]
-                          forKey:[[element attributeForName:kIDKey] stringValue]];
-        if ([[[element attributeForName:kMediaTypeKey] stringValue] isEqualToString:@"application/x-dtbncx+xml"]){
-            ncxFileName = [[element attributeForName:kHrefTypeKey] stringValue];
-            //          NSLog(@"%@ : %@", [[element attributeForName:@"id"] stringValue], [[element attributeForName:@"href"] stringValue]);
-        }
+        NSString *idValue = [element attributeForName:kIDKey].stringValue;
+        NSString *hrefTypeValue = [element attributeForName:kHrefTypeKey].stringValue;
+        NSString *mediaTypeValue = [element attributeForName:kMediaTypeKey].stringValue;
         
-        if ([[[element attributeForName:kMediaTypeKey] stringValue] isEqualToString:@"application/xhtml+xml"]){
-            ncxFileName = [[element attributeForName:kHrefTypeKey] stringValue];
-            //          NSLog(@"%@ : %@", [[element attributeForName:@"id"] stringValue], [[element attributeForName:@"href"] stringValue]);
+		[itemDictionary setValue:hrefTypeValue forKey:idValue];
+        
+        if ([mediaTypeValue isEqualToString:@"application/x-dtbncx+xml"]){
+            ncxFileName = hrefTypeValue;
+        } else if ([mediaTypeValue isEqualToString:@"application/xhtml+xml"]){
+            ncxFileName = hrefTypeValue;
         }
 	}
 	
-    int lastSlash = [opfPath rangeOfString:@"/" options:NSBackwardsSearch].location;
+    NSUInteger lastSlash = [opfPath rangeOfString:@"/" options:NSBackwardsSearch].location;
 	NSString *ebookBasePath = [opfPath substringToIndex:(lastSlash +1)];
     NSURL *tocNCXURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", ebookBasePath, ncxFileName]];
     CXMLDocument *ncxToc = [[CXMLDocument alloc] initWithContentsOfURL:tocNCXURL
@@ -117,38 +130,37 @@ static NSString * const kOPFItemKey = @"//opf:item";
                                                                  error:nil];
     NSMutableDictionary *titleDictionary = [NSMutableDictionary dictionary];
     for (CXMLElement *element in itemsArray) {
-        NSString *href = [[element attributeForName:kHrefTypeKey] stringValue];
+        NSString *href = [element attributeForName:kHrefTypeKey].stringValue;
         NSString *xpath = [NSString stringWithFormat:@"//ncx:content[@src='%@']/../ncx:navLabel/ncx:text", href];
         
-        NSDictionary *namespaceMappings = [NSDictionary dictionaryWithObject:@"http://www.daisy.org/z3986/2005/ncx/"
-                                                                      forKey:kNCXKey];
+        NSDictionary *namespaceMappings = @{@"http://www.daisy.org/z3986/2005/ncx/" : kNCXKey};
         NSArray *navPoints = [ncxToc nodesForXPath:xpath
                                  namespaceMappings:namespaceMappings
                                              error:nil];
         if (navPoints.count != 0){
             CXMLElement *titleElement = navPoints[0];
-            [titleDictionary setValue:[titleElement stringValue] forKey:href];
+            [titleDictionary setValue:titleElement.stringValue forKey:href];
         }
     }
     
-    NSDictionary *namespaceDict = [NSDictionary dictionaryWithObject:kIDPFKey
-                                                              forKey:kOPFKey];
-	NSArray *itemRefsArray = [opfFile nodesForXPath:@"//opf:itemref"
-                                  namespaceMappings:namespaceDict
+    NSArray *itemRefsArray = [opfFile nodesForXPath:@"//opf:itemref"
+                                  namespaceMappings:@{kIDPFKey : kOPFKey}
                                               error:nil];
 	NSMutableArray *tmpArray = [NSMutableArray array];
     int count = 0;
 	for (CXMLElement *element in itemRefsArray) {
-        NSString *chapHref = [itemDictionary valueForKey:[[element attributeForName:kIDRefKey] stringValue]];
+        NSString *idRefValue = [element attributeForName:kIDRefKey].stringValue;
+        NSString *chapHref = [itemDictionary valueForKey:idRefValue];
         
-        Chapter *tmpChapter = [[Chapter alloc] initWithPath:[NSString stringWithFormat:@"%@%@", ebookBasePath, chapHref]
-                                                      title:[titleDictionary valueForKey:chapHref]
+        NSString *chapterPath = [NSString stringWithFormat:@"%@%@", ebookBasePath, chapHref];
+        NSString *title = [titleDictionary valueForKey:chapHref];
+        Chapter *tmpChapter = [[Chapter alloc] initWithPath:chapterPath
+                                                      title:title
                                                chapterIndex:count++];
 		[tmpArray addObject:tmpChapter];
 	}
 	
 	self.spineArray = [NSArray arrayWithArray:tmpArray];
 }
-
 
 @end
