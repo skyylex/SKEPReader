@@ -46,15 +46,17 @@ static NSString * const kOPFItemKey = @"//opf:item";
 
 #pragma mark - Parsing
 
-- (void)saveEpubHash {
-    NSAssert([[NSFileManager defaultManager] fileExistsAtPath:self.epubFilePath], @"no file");
+- (NSString *)generateSHA1:(NSString *)filepath {
+    BOOL fileExist = [[NSFileManager defaultManager] fileExistsAtPath:filepath];
+    NSAssert(fileExist, @"No file to calculate SHA1");
     
-    NSData *epubData = [NSData dataWithContentsOfFile:self.epubFilePath];
-    self.sha1 = [epubData ks_SHA1DigestString];
+    NSData *epubData = [NSData dataWithContentsOfFile:filepath];
+    NSString *sha1 = [epubData ks_SHA1DigestString];
+    return sha1;
 }
 
 - (void)parseEpub {
-    [self saveEpubHash];
+    self.sha1 = [self generateSHA1:self.epubFilePath];
 	[self unzipAndSaveFileNamed:self.epubFilePath];
     
 	NSString *opfPath = [self parseManifestFile];
