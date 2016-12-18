@@ -37,7 +37,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
         NSParameterAssert(path != nil);
         
 		self.epubFilePath = path;
-		self.spineArray = [NSMutableArray array];
+		self.chapters = [NSMutableArray array];
     
         self.sha1 = [SKHashingSupport generateSHA1:self.epubFilePath];
         NSString *applicationSupportDirectory = [SKFileSystemSupport applicationSupportDirectory];
@@ -102,7 +102,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
                                                                 options:0
                                                                   error:&opfReadingError];
 	NSArray *itemsArray = [opfFile nodesForXPath:kOPFItemKey
-                               namespaceMappings:@{kIDPFKey : kOPFKey}
+                               namespaceMappings:@{kOPFKey : kIDPFKey}
                                            error:nil];
     
     NSString *ncxFileName;
@@ -123,7 +123,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
 	}
 	
     NSUInteger lastSlash = [opfPath rangeOfString:@"/" options:NSBackwardsSearch].location;
-	NSString *ebookBasePath = [opfPath substringToIndex:(lastSlash +1)];
+	NSString *ebookBasePath = [opfPath substringToIndex:(lastSlash + 1)];
     NSURL *tocNCXURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@", ebookBasePath, ncxFileName]];
     CXMLDocument *ncxToc = [[CXMLDocument alloc] initWithContentsOfURL:tocNCXURL
                                                                options:0
@@ -133,7 +133,7 @@ static NSString * const kOPFItemKey = @"//opf:item";
         NSString *href = [element attributeForName:kHrefTypeKey].stringValue;
         NSString *xpath = [NSString stringWithFormat:@"//ncx:content[@src='%@']/../ncx:navLabel/ncx:text", href];
         
-        NSDictionary *namespaceMappings = @{@"http://www.daisy.org/z3986/2005/ncx/" : kNCXKey};
+        NSDictionary *namespaceMappings = @{kNCXKey : @"http://www.daisy.org/z3986/2005/ncx/"};
         NSArray *navPoints = [ncxToc nodesForXPath:xpath
                                  namespaceMappings:namespaceMappings
                                              error:nil];
@@ -144,9 +144,9 @@ static NSString * const kOPFItemKey = @"//opf:item";
     }
     
     NSArray *itemRefsArray = [opfFile nodesForXPath:@"//opf:itemref"
-                                  namespaceMappings:@{kIDPFKey : kOPFKey}
+                                  namespaceMappings:@{kOPFKey : kIDPFKey}
                                               error:nil];
-	NSMutableArray *tmpArray = [NSMutableArray array];
+	NSMutableArray *chapters = [NSMutableArray array];
     int count = 0;
 	for (CXMLElement *element in itemRefsArray) {
         NSString *idRefValue = [element attributeForName:kIDRefKey].stringValue;
@@ -154,13 +154,13 @@ static NSString * const kOPFItemKey = @"//opf:item";
         
         NSString *chapterPath = [NSString stringWithFormat:@"%@%@", ebookBasePath, chapHref];
         NSString *title = [titleDictionary valueForKey:chapHref];
-        Chapter *tmpChapter = [[Chapter alloc] initWithPath:chapterPath
+        Chapter *chapter = [[Chapter alloc] initWithPath:chapterPath
                                                       title:title
                                                chapterIndex:count++];
-		[tmpArray addObject:tmpChapter];
+		[chapters addObject:chapter];
 	}
 	
-	self.spineArray = [NSArray arrayWithArray:tmpArray];
+	self.chapters = [NSArray arrayWithArray:chapters];
 }
 
 @end

@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) NSString *epubFilePath;
 @property (nonatomic, strong) NSString *sha1;
-@property (nonatomic, strong) NSArray *spineArray;
+@property (nonatomic, strong) NSArray *chapters;
 
 - (instancetype)initWithEPubPath:(NSString *)path;
 

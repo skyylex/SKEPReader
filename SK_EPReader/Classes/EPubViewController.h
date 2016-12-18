@@ -19,7 +19,7 @@ static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStor
 
 @interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterLoaderDelegate, UISearchBarDelegate> {
     
-    NSUInteger currentSpineIndex;
+    NSUInteger currentChapterIndex;
 	NSUInteger currentPageInSpineIndex;
 	NSUInteger pagesInCurrentSpineCount;
 	NSUInteger currentTextSize;
@@ -37,7 +37,7 @@ static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStor
 - (IBAction)slidingStarted:(id)sender;
 - (IBAction)slidingEnded:(id)sender;
 
-- (void)loadSpine:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult *)theResult;
+- (void)loadChapter:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult *)theResult;
 
 - (void)loadEpub:(NSURL*) epubURL;
 

@@ -8,7 +8,6 @@
 
 #import "ChapterListViewController.h"
 
-
 @implementation ChapterListViewController
 
 - (instancetype)initWithStyle:(UITableViewStyle)style {
@@ -29,7 +28,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.epubViewController.loadedEpub.spineArray count];
+    return self.epubViewController.loadedEpub.chapters.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -42,10 +41,12 @@
                                       reuseIdentifier:CellIdentifier];
     }
     
+    Chapter *chapter = self.epubViewController.loadedEpub.chapters[indexPath.row];
+    
     cell.textLabel.numberOfLines = 2;
     cell.textLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
     cell.textLabel.adjustsFontSizeToFitWidth = YES;
-    cell.textLabel.text = [self.epubViewController.loadedEpub.spineArray[indexPath.row] title];
+    cell.textLabel.text = chapter.title;
     
     return cell;
 }
@@ -55,7 +56,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.epubViewController loadSpine:[indexPath row]
+    [self.epubViewController loadChapter:indexPath.row
                            atPageIndex:0
                  highlightSearchResult:nil];
 }

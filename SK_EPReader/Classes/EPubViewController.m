@@ -22,23 +22,14 @@
 
 @property (nonatomic, strong) ChapterLoader *loader;
 
-- (void)gotoNextSpine;
-- (void)gotoPrevSpine;
-- (void)gotoNextPage;
-- (void)gotoPrevPage;
-- (NSUInteger)getGlobalPageCount;
-- (void)gotoPageInCurrentSpine:(NSUInteger)pageIndex;
-- (void)updatePagination;
-- (void)loadSpine:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex;
-
 @end
 
 @implementation EPubViewController
 
-#pragma mark -
+#pragma mark - Loading
 
 - (void)loadEpub:(NSURL *)epubURL{
-    currentSpineIndex = 0;
+    currentChapterIndex = 0;
     currentPageInSpineIndex = 0;
     pagesInCurrentSpineCount = 0;
     totalPagesCount = 0;
@@ -52,14 +43,13 @@
 	[self updatePagination];
 }
 
-#pragma mark -
-#pragma mark ChapterDelegate
+#pragma mark - ChapterDelegate
 
 - (void)chapterDidFinishLoad:(Chapter *)chapter{
     totalPagesCount += chapter.pageCount;
 
-	if (chapter.chapterIndex + 1 < [self.loadedEpub.spineArray count]) {
-        Chapter *currentChapter = self.loadedEpub.spineArray[chapter.chapterIndex + 1];
+	if (chapter.chapterIndex + 1 < self.loadedEpub.chapters.count) {
+        Chapter *currentChapter = self.loadedEpub.chapters[chapter.chapterIndex + 1];
         
         self.loader = [[ChapterLoader alloc] initWithChapter:currentChapter];
         self.loader.delegate = self;
@@ -74,25 +64,25 @@
 	}
 }
 
-#pragma mark -
-#pragma mark Spine
+#pragma mark - Chapters
 
-- (void)loadSpine:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex {
-	[self loadSpine:spineIndex atPageIndex:pageIndex highlightSearchResult:nil];
+- (void)loadChapter:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex {
+	[self loadChapter:spineIndex atPageIndex:pageIndex highlightSearchResult:nil];
 }
 
-- (void)loadSpine:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult*)theResult{
+- (void)loadChapter:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult*)theResult{
 	self.webView.hidden = YES;
 	self.currentSearchResult = theResult;
 
 	[chaptersPopover dismissPopoverAnimated:YES];
 	[searchResultsPopover dismissPopoverAnimated:YES];
 	
-	NSURL *url = [NSURL fileURLWithPath:[[self.loadedEpub.spineArray objectAtIndex:spineIndex] spinePath]];
+    Chapter *chapter = self.loadedEpub.chapters[spineIndex];
+	NSURL *url = [NSURL fileURLWithPath:chapter.spinePath];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 	
     currentPageInSpineIndex = pageIndex;
-	currentSpineIndex = spineIndex;
+	currentChapterIndex = spineIndex;
 	
     if (!self.paginating){
         [self setPageLabelForAmountAndIndex];
@@ -101,92 +91,96 @@
 }
 
 
-#pragma mark -
-#pragma mark Navigation
+#pragma mark - Navigation
 
-- (void)gotoPageInCurrentSpine:(NSUInteger)pageIndex {
-	if (pageIndex >= pagesInCurrentSpineCount){
-		pageIndex = pagesInCurrentSpineCount - 1;
-		currentPageInSpineIndex = pagesInCurrentSpineCount - 1;	
-	}
-	
-	float pageOffset = pageIndex * self.webView.bounds.size.width;
-
-	NSString *goToOffsetFunc = [NSString stringWithFormat:@" function pageScroll(xOffset){ window.scroll(xOffset,0); } "];
-	NSString *goTo =[NSString stringWithFormat:@"pageScroll(%f)", pageOffset];
-	
-	[self.webView stringByEvaluatingJavaScriptFromString:goToOffsetFunc];
-	[self.webView stringByEvaluatingJavaScriptFromString:goTo];
-	
-	if (!self.paginating) {
-		[self updateSliderValue];
-	}
-	
-	self.webView.hidden = NO;
+// Current position checkers
+- (BOOL)canMoveToNextChapter {
+    return (self.paginating == NO) && (currentChapterIndex + 1 < self.loadedEpub.chapters.count);
 }
 
-- (void)gotoNextSpine {
-	if (!self.paginating) {
-		if (currentSpineIndex + 1 < [self.loadedEpub.spineArray count]) {
-			[self loadSpine:++currentSpineIndex atPageIndex:0];
-		}	
+- (BOOL)canMoveToPreviousChapter {
+    return (self.paginating == NO) && ((int)currentChapterIndex - 1 >= 0);
+}
+
+- (BOOL)canMoveToNextPage {
+    return (self.paginating == NO) && (currentPageInSpineIndex + 1 < pagesInCurrentSpineCount);
+}
+
+- (BOOL)canMoveToPreviousPage {
+    return (self.paginating == NO) && ((int)(currentChapterIndex - 1) >= 0);
+}
+
+// Actual movement
+- (void)moveToNextChapter {
+    if (self.canMoveToNextChapter) {
+        [self loadChapter:++currentChapterIndex atPageIndex:0];
 	}
 }
 
-- (void)gotoPrevSpine {
-	if (!self.paginating){
-		if ((int)(currentSpineIndex - 1) >= 0){
-			[self loadSpine:--currentSpineIndex atPageIndex:0];
-		}	
+- (void)moveToPreviousChapter {
+    if (self.canMoveToPreviousChapter) {
+        [self loadChapter:--currentChapterIndex atPageIndex:0];
 	}
 }
 
-- (void)gotoNextPage {
-	if (!self.paginating){
-		if(currentPageInSpineIndex+1<pagesInCurrentSpineCount){
-			[self gotoPageInCurrentSpine:++currentPageInSpineIndex];
-		} else {
-			[self gotoNextSpine];
-		}		
+- (void)moveToNextPage {
+	if (self.canMoveToNextPage) {
+        [self moveToPageInCurrentChapter:++currentPageInSpineIndex];
+    } else {
+        [self moveToNextChapter];
 	}
 }
 
-- (void)gotoPrevPage {
-	if (!self.paginating) {
-		if ((int)(currentSpineIndex - 1) >= 0){
-			[self gotoPageInCurrentSpine:--currentPageInSpineIndex];
-		} else {
-			if (currentSpineIndex != 0){
-                Chapter *currentChapter = self.loadedEpub.spineArray[currentSpineIndex - 1];
-				NSUInteger targetPage = [currentChapter pageCount];
-				[self loadSpine:--currentSpineIndex atPageIndex:targetPage - 1];
-			}
-		}
+- (void)moveToPreviousPage {
+	if (self.canMoveToPreviousPage) {
+        [self moveToPageInCurrentChapter:--currentPageInSpineIndex];
+    } else {
+        [self moveToPreviousChapter];
 	}
 }
 
-#pragma mark -
-#pragma mark Page Label
+- (void)moveToPageInCurrentChapter:(NSUInteger)pageIndex {
+    if (pageIndex >= pagesInCurrentSpineCount){
+        pageIndex = pagesInCurrentSpineCount - 1;
+        currentPageInSpineIndex = pagesInCurrentSpineCount - 1;
+    }
+    
+    float pageOffset = pageIndex * self.webView.bounds.size.width;
+    
+    NSString *goToOffsetFunc = [NSString stringWithFormat:@" function pageScroll(xOffset){ window.scroll(xOffset,0); } "];
+    NSString *goTo = [NSString stringWithFormat:@"pageScroll(%f)", pageOffset];
+    
+    [self.webView stringByEvaluatingJavaScriptFromString:goToOffsetFunc];
+    [self.webView stringByEvaluatingJavaScriptFromString:goTo];
+    
+    if (!self.paginating) {
+        [self updateSliderValue];
+    }
+    
+    self.webView.hidden = NO;
+}
+
+#pragma mark - Page Label
 
 - (void)setPageLabelForAmountOnly {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"?/%ld", totalPagesCount]];
+    NSString *text = [NSString stringWithFormat:@"?/%d", totalPagesCount];
+    [self.currentPageLabel setText:text];
 }
 
 - (void)setPageLabelForAmountAndIndex {
-    [self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", [self getGlobalPageCount], totalPagesCount]];
+    NSString *text = [NSString stringWithFormat:@"%d/%d", self.getGlobalPageCount, totalPagesCount];
+    [self.currentPageLabel setText:text];
 }
 
-#pragma mark -
-#pragma mark Pagination
+#pragma mark - Pagination
 
 - (NSUInteger)getGlobalPageCount{
     __block NSUInteger pageCount = 0;
     
-    [self.loadedEpub.spineArray enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
-        if (idx < currentSpineIndex) {
+    [self.loadedEpub.chapters enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
+        if (idx < currentChapterIndex) {
             pageCount += [currentChapter pageCount];
-        }
-        else {
+        } else {
             *stop = YES;
         }
     }];
@@ -202,31 +196,53 @@
             self.paginating = YES;
             totalPagesCount = 0;
             
-            [self loadSpine:currentSpineIndex atPageIndex:currentPageInSpineIndex];
+            [self loadChapter:currentChapterIndex atPageIndex:currentPageInSpineIndex];
             
-            Chapter *chapter = self.loadedEpub.spineArray[0];
-            
-            self.loader = [[ChapterLoader alloc] initWithChapter:chapter];
-            self.loader.delegate = self;
-            [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:currentTextSize];
-            
-            [self.currentPageLabel setText:@"?/?"];
+            Chapter *chapter = self.loadedEpub.chapters.firstObject;
+            if (chapter != nil) {
+                self.loader = [[ChapterLoader alloc] initWithChapter:chapter];
+                self.loader.delegate = self;
+                [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:currentTextSize];
+                
+                [self.currentPageLabel setText:@"?/?"];
+            }
         }
     }
 }
 
-#pragma mark -
-#pragma mark IBAction
+#pragma mark - Event-based methods
+
+- (void)onTextSizeIncreased {
+    if (currentTextSize == kMaxTextSize){
+        [self.incTextSizeButton setEnabled:NO];
+    }
+    [self.decTextSizeButton setEnabled:YES];
+    
+    [self onTextSizeChanged];
+}
+
+- (void)onTextSizeDecreased {
+    if (currentTextSize == kMinTextSize) {
+        [self.decTextSizeButton setEnabled:NO];
+    }
+    
+    [self.incTextSizeButton setEnabled:YES];
+    
+    [self onTextSizeChanged];
+}
+
+- (void)onTextSizeChanged {
+    [self updatePagination];
+}
+
+#pragma mark - IBAction
 
 - (IBAction)increaseTextSizeClicked:(id)sender{
 	if (!self.paginating){
 		if (currentTextSize + kChangeTextStep <= kMaxTextSize){
 			currentTextSize += kChangeTextStep;
-			[self updatePagination];
-			if (currentTextSize == kMaxTextSize){
-				[self.incTextSizeButton setEnabled:NO];
-			}
-			[self.decTextSizeButton setEnabled:YES];
+			
+            [self onTextSizeIncreased];
 		}
 	}
 }
@@ -234,13 +250,8 @@
 	if (!self.paginating){
 		if (currentTextSize - kChangeTextStep >= kMinTextSize) {
 			currentTextSize -= kChangeTextStep;
-			[self updatePagination];
-			
-            if (currentTextSize == kMinTextSize) {
-				[self.decTextSizeButton setEnabled:NO];
-			}
-            
-			[self.incTextSizeButton setEnabled:YES];
+        
+            [self onTextSizeDecreased];
 		}
 	}
 }
@@ -298,23 +309,24 @@
 - (IBAction)slidingStarted:(id)sender {
     NSUInteger targetPage = [self currentSliderPage];
     if (targetPage == 0) {
-        targetPage++;
+        targetPage = 1;
     }
     
-	[self.currentPageLabel setText:[NSString stringWithFormat:@"%ld/%ld", targetPage, totalPagesCount]];
+    NSString *text = [NSString stringWithFormat:@"%d/%d", targetPage, totalPagesCount];
+	[self.currentPageLabel setText:text];
 }
 
 - (IBAction)slidingEnded:(id)sender {
 	NSUInteger targetPage = [self currentSliderPage];
     if (targetPage == 0) {
-        targetPage++;
+        targetPage = 1;
     }
 	
     __block NSUInteger pageSum = 0;
     __block NSUInteger chapterIndex = 0;
     __block NSUInteger pageIndex = 0;
     
-    [self.loadedEpub.spineArray enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
+    [self.loadedEpub.chapters enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
         pageSum += [currentChapter pageCount];
         if (pageSum >= targetPage) {
             pageIndex = [currentChapter pageCount] - 1 - pageSum + targetPage;
@@ -323,7 +335,7 @@
         }
     }];
 
-	[self loadSpine:chapterIndex atPageIndex:pageIndex];
+	[self loadChapter:chapterIndex atPageIndex:pageIndex];
 }
 
 #pragma mark -
@@ -362,11 +374,10 @@
     float totalWidth = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] floatValue];
     pagesInCurrentSpineCount = (NSUInteger)(totalWidth / self.webView.bounds.size.width);
     
-    [self gotoPageInCurrentSpine:currentPageInSpineIndex];
+    [self moveToPageInCurrentChapter:currentPageInSpineIndex];
 }
 
-#pragma mark -
-#pragma mark Rotation support
+#pragma mark - Rotation support
 
 // Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -375,54 +386,63 @@
 	return YES;
 }
 
-#pragma mark -
-#pragma mark NSObject
+#pragma mark - UIViewController Lifecycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self prepareWebview];
+    [self prepareGestures];
+    [self prepareSubscriptions];
+    [self prepareDisplaySettings];
+}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark -
-#pragma mark View lifecycle
+#pragma mark - Prepare
 
- // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
+- (void)prepareDisplaySettings {
+    currentTextSize = 100;
+}
+
+- (void)prepareSubscriptions {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updatePagination)
                                                  name:UIApplicationDidChangeStatusBarOrientationNotification
                                                object:nil];
-	[self.webView setDelegate:self];
-		
-	UIScrollView *sv = nil;
-	for (UIView* v in self.webView.subviews) {
-		if([v isKindOfClass:[UIScrollView class]]){
-			sv = (UIScrollView*) v;
-			sv.scrollEnabled = NO;
-			sv.bounces = NO;
-		}
-	}
-    
-    [self connectGestures];
-    
-    currentTextSize = 100;
 }
 
-#pragma mark -
-#pragma mark Gestures
+- (void)prepareWebview {
+    [self.webView setDelegate:self];
+    
+    [self prepareScrollView];
+}
 
-- (void)connectGestures {
-    UISwipeGestureRecognizer *rightSwipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                                               action:@selector(gotoNextPage)];
-    [rightSwipeRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
+- (void)prepareScrollView {
+    UIScrollView *scrollView = nil;
+    for (UIView *subview in self.webView.subviews) {
+        if ([subview isKindOfClass:[UIScrollView class]]){
+            scrollView = (UIScrollView *)subview;
+            scrollView.scrollEnabled = NO;
+            scrollView.bounces = NO;
+        }
+    }
+}
+
+- (void)prepareGestures {
+    SEL rightAction = @selector(moveToNextPage);
+    SEL leftAction = @selector(moveToPreviousPage);
+    UISwipeGestureRecognizer *right = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                action:rightAction];
+    UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                               action:leftAction];
+    [left setDirection:UISwipeGestureRecognizerDirectionRight];
+    [right setDirection:UISwipeGestureRecognizerDirectionLeft];
     
-    UISwipeGestureRecognizer* leftSwipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                                              action:@selector(gotoPrevPage)];
-    [leftSwipeRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
-    
-    [self.webView addGestureRecognizer:rightSwipeRecognizer];
-    [self.webView addGestureRecognizer:leftSwipeRecognizer];
+    [self.webView addGestureRecognizer:right];
+    [self.webView addGestureRecognizer:left];
 }
 
 @end
