@@ -19,11 +19,12 @@ static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStor
 
 @interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterLoaderDelegate, UISearchBarDelegate> {
     
-    NSUInteger currentChapterIndex;
-	NSUInteger pageOffsetInChapter;
-	NSUInteger pagesInCurrentSpineCount;
-	NSUInteger currentTextSize;
-	NSUInteger totalPagesCount;
+    int currentChapterIndex;
+	int pageOffsetInChapter;
+	int pagesInCurrentSpineCount;
+	int totalPagesCount;
+    
+    NSUInteger currentTextSize;
     
     WYPopoverController *chaptersPopover;
     WYPopoverController *searchResultsPopover;

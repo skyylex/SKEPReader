@@ -99,42 +99,49 @@
 }
 
 - (BOOL)canMoveToPreviousChapter {
-    return (self.paginating == NO) && ((int)currentChapterIndex - 1 >= 0);
+    return (self.paginating == NO) && (currentChapterIndex > 0);
 }
 
+// Inside chapter
 - (BOOL)canMoveToNextPage {
     return (self.paginating == NO) && (pageOffsetInChapter + 1 < pagesInCurrentSpineCount);
 }
 
+// Inside chapter
 - (BOOL)canMoveToPreviousPage {
-    return (self.paginating == NO) && ((int)(currentChapterIndex - 1) >= 0);
+    return (self.paginating == NO) && (pageOffsetInChapter > 0);
 }
 
 // Actual movement
 - (void)moveToNextChapter {
     if (self.canMoveToNextChapter) {
-        [self loadChapter:++currentChapterIndex atPageIndex:0];
+        currentChapterIndex = currentChapterIndex + 1;
+        [self loadChapter:currentChapterIndex atPageIndex:0];
 	}
 }
 
 - (void)moveToPreviousChapter {
     if (self.canMoveToPreviousChapter) {
-        [self loadChapter:--currentChapterIndex atPageIndex:0];
+        currentChapterIndex = currentChapterIndex - 1;
+        Chapter *chapter = self.loadedEpub.chapters[currentChapterIndex];
+        [self loadChapter:currentChapterIndex atPageIndex:chapter.pageCount - 1];
 	}
 }
 
 - (void)moveToNextPage {
 	if (self.canMoveToNextPage) {
-        [self moveToPageInCurrentChapter:++pageOffsetInChapter];
-    } else {
+        pageOffsetInChapter = pageOffsetInChapter + 1;
+        [self moveToPageInCurrentChapter:pageOffsetInChapter];
+    } else if (self.canMoveToNextChapter) {
         [self moveToNextChapter];
 	}
 }
 
 - (void)moveToPreviousPage {
 	if (self.canMoveToPreviousPage) {
-        [self moveToPageInCurrentChapter:--pageOffsetInChapter];
-    } else {
+        pageOffsetInChapter = pageOffsetInChapter - 1;
+        [self moveToPageInCurrentChapter:pageOffsetInChapter];
+    } else if (self.canMoveToPreviousChapter) {
         [self moveToPreviousChapter];
 	}
 }
