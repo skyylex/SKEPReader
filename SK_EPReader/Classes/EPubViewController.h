@@ -20,7 +20,7 @@ static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStor
 @interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterLoaderDelegate, UISearchBarDelegate> {
     
     NSUInteger currentChapterIndex;
-	NSUInteger currentPageInSpineIndex;
+	NSUInteger pageOffsetInChapter;
 	NSUInteger pagesInCurrentSpineCount;
 	NSUInteger currentTextSize;
 	NSUInteger totalPagesCount;

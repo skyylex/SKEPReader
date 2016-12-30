@@ -30,7 +30,7 @@
 
 - (void)loadEpub:(NSURL *)epubURL{
     currentChapterIndex = 0;
-    currentPageInSpineIndex = 0;
+    pageOffsetInChapter = 0;
     pagesInCurrentSpineCount = 0;
     totalPagesCount = 0;
 	self.searching = NO;
@@ -81,7 +81,7 @@
 	NSURL *url = [NSURL fileURLWithPath:chapter.spinePath];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 	
-    currentPageInSpineIndex = pageIndex;
+    pageOffsetInChapter = pageIndex;
 	currentChapterIndex = spineIndex;
 	
     if (!self.paginating){
@@ -103,7 +103,7 @@
 }
 
 - (BOOL)canMoveToNextPage {
-    return (self.paginating == NO) && (currentPageInSpineIndex + 1 < pagesInCurrentSpineCount);
+    return (self.paginating == NO) && (pageOffsetInChapter + 1 < pagesInCurrentSpineCount);
 }
 
 - (BOOL)canMoveToPreviousPage {
@@ -125,7 +125,7 @@
 
 - (void)moveToNextPage {
 	if (self.canMoveToNextPage) {
-        [self moveToPageInCurrentChapter:++currentPageInSpineIndex];
+        [self moveToPageInCurrentChapter:++pageOffsetInChapter];
     } else {
         [self moveToNextChapter];
 	}
@@ -133,7 +133,7 @@
 
 - (void)moveToPreviousPage {
 	if (self.canMoveToPreviousPage) {
-        [self moveToPageInCurrentChapter:--currentPageInSpineIndex];
+        [self moveToPageInCurrentChapter:--pageOffsetInChapter];
     } else {
         [self moveToPreviousChapter];
 	}
@@ -142,7 +142,7 @@
 - (void)moveToPageInCurrentChapter:(NSUInteger)pageIndex {
     if (pageIndex >= pagesInCurrentSpineCount){
         pageIndex = pagesInCurrentSpineCount - 1;
-        currentPageInSpineIndex = pagesInCurrentSpineCount - 1;
+        pageOffsetInChapter = pagesInCurrentSpineCount - 1;
     }
     
     float pageOffset = pageIndex * self.webView.bounds.size.width;
@@ -155,6 +155,7 @@
     
     if (!self.paginating) {
         [self updateSliderValue];
+        [self setPageLabelForAmountAndIndex];
     }
     
     self.webView.hidden = NO;
@@ -168,25 +169,25 @@
 }
 
 - (void)setPageLabelForAmountAndIndex {
-    NSString *text = [NSString stringWithFormat:@"%d/%d", self.getGlobalPageCount, totalPagesCount];
+    NSString *text = [NSString stringWithFormat:@"%d/%d", self.calculateCurrentPageInBook, totalPagesCount];
     [self.currentPageLabel setText:text];
 }
 
 #pragma mark - Pagination
 
-- (NSUInteger)getGlobalPageCount{
-    __block NSUInteger pageCount = 0;
+- (NSUInteger)calculateCurrentPageInBook {
+    __block NSUInteger previousChapterPages = 0;
+    NSArray *chapters = self.loadedEpub.chapters;
     
-    [self.loadedEpub.chapters enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
+    [chapters enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
         if (idx < currentChapterIndex) {
-            pageCount += [currentChapter pageCount];
+            previousChapterPages += currentChapter.pageCount;
         } else {
             *stop = YES;
         }
     }];
     
-    pageCount += currentPageInSpineIndex + 1;
-    return pageCount;
+    return previousChapterPages + pageOffsetInChapter + 1;
 }
 
 - (void)updatePagination{
@@ -196,7 +197,7 @@
             self.paginating = YES;
             totalPagesCount = 0;
             
-            [self loadChapter:currentChapterIndex atPageIndex:currentPageInSpineIndex];
+            [self loadChapter:currentChapterIndex atPageIndex:pageOffsetInChapter];
             
             Chapter *chapter = self.loadedEpub.chapters.firstObject;
             if (chapter != nil) {
@@ -293,16 +294,39 @@
 }
 
 
-#pragma mark -
-#pragma mark Slider
+#pragma mark - Page slider
+
+/// Real pages range [0 - (pages_count - 1)]
+/// Presented in reader pages [1 - #(pages_count)]
+/// So it's shifted (presented_page_number = real_page_number + 1) to be more natural
+
+- (void)updateSliderLimits {
+    NSAssert(self.pageSlider != nil, @"Page slider is nil");
+    NSAssert(totalPagesCount > 0, @"No pages in the book");
+    
+    int presentedFirstPage = 1;
+    int presentedLastPage = totalPagesCount;
+    if (self.pageSlider.minimumValue != presentedFirstPage) {
+        self.pageSlider.minimumValue = presentedFirstPage;
+    }
+    
+    if (self.pageSlider.maximumValue != (float)presentedLastPage) {
+        self.pageSlider.maximumValue = (float)presentedLastPage;
+    }
+}
 
 - (void)updateSliderValue {
-    [self.pageSlider setValue:100.0 * (float)[self getGlobalPageCount] / (float)totalPagesCount
-                     animated:YES];
+    NSUInteger currentPageInBook = [self calculateCurrentPageInBook];
+    if (currentPageInBook == 0 || currentPageInBook >= totalPagesCount) { return; }
+    
+    /// Not the best place to update limits, but the most stable way to ensure that
+    /// slider has proper max-min borders
+    [self updateSliderLimits];
+    [self.pageSlider setValue:currentPageInBook animated:YES];
 }
 
 - (NSUInteger)currentSliderPage {
-    NSUInteger currentSliderPage = (NSUInteger)((self.pageSlider.value / 100.0) * (float)totalPagesCount);
+    NSUInteger currentSliderPage = (NSUInteger)(self.pageSlider.value);
     return currentSliderPage;
 }
 
@@ -374,7 +398,7 @@
     float totalWidth = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] floatValue];
     pagesInCurrentSpineCount = (NSUInteger)(totalWidth / self.webView.bounds.size.width);
     
-    [self moveToPageInCurrentChapter:currentPageInSpineIndex];
+    [self moveToPageInCurrentChapter:pageOffsetInChapter];
 }
 
 #pragma mark - Rotation support
