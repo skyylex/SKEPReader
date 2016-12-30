@@ -186,6 +186,7 @@
     __block NSUInteger previousChapterPages = 0;
     NSArray *chapters = self.loadedEpub.chapters;
     
+    // TODO: Could be cached for "heavy" books with a lot of chapters (as offset for each book)
     [chapters enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
         if (idx < currentChapterIndex) {
             previousChapterPages += currentChapter.pageCount;
