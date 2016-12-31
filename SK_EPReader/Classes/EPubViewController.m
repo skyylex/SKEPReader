@@ -62,7 +62,8 @@
         self.paginating = NO;
         NSLog(@"Processing was finished.");
         
-		[self setPageLabelForAmountAndIndex];
+        [self setPageLabelForAmountAndIndex];
+        [self updateSliderLimits];
         [self updateSliderValue];
 		
         [self loadChapter:self.readingState.chapterIndex atPageIndex:self.readingState.pageInChapter];
@@ -329,9 +330,6 @@
     NSUInteger currentPageInBook = [self calculateCurrentPageInBook];
     if (currentPageInBook == 0 || currentPageInBook >= self.readingState.total) { return; }
     
-    /// Not the best place to update limits, but the most stable way to ensure that
-    /// slider has proper max-min borders
-    [self updateSliderLimits];
     [self.pageSlider setValue:currentPageInBook animated:YES];
 }
 
