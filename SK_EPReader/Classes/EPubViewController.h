@@ -25,11 +25,6 @@ static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStor
 	int totalPagesCount;
     
     NSUInteger currentTextSize;
-    
-    WYPopoverController *chaptersPopover;
-    WYPopoverController *searchResultsPopover;
-
-    SearchResultsViewController* searchResViewController;
 }
 
 - (IBAction)showChapterIndex:(id)sender;

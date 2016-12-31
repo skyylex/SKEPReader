@@ -22,6 +22,11 @@
 
 @property (nonatomic, strong) ChapterLoader *loader;
 
+@property (nonatomic, strong) WYPopoverController *chaptersPopover;
+@property (nonatomic, strong) WYPopoverController *searchResultsPopover;
+
+@property (nonatomic, strong) SearchResultsViewController* searchResViewController;
+
 @end
 
 @implementation EPubViewController
@@ -82,8 +87,8 @@
 	self.webView.hidden = YES;
 	self.currentSearchResult = theResult;
 
-	[chaptersPopover dismissPopoverAnimated:YES];
-	[searchResultsPopover dismissPopoverAnimated:YES];
+	[self.chaptersPopover dismissPopoverAnimated:YES];
+	[self.searchResultsPopover dismissPopoverAnimated:YES];
 	
     Chapter *chapter = self.loadedEpub.chapters[spineIndex];
 	NSURL *url = [NSURL fileURLWithPath:chapter.spinePath];
@@ -213,8 +218,6 @@
             self.paginating = YES;
             totalPagesCount = 0;
             
-//            [self loadChapter:currentChapterIndex atPageIndex:pageOffsetInChapter];
-            
             Chapter *chapter = self.loadedEpub.chapters.firstObject;
             if (chapter != nil) {
                 self.loader = [[ChapterLoader alloc] initWithChapter:chapter];
@@ -255,55 +258,56 @@
 #pragma mark - IBAction
 
 - (IBAction)increaseTextSizeClicked:(id)sender{
-	if (!self.paginating){
-		if (currentTextSize + kChangeTextStep <= kMaxTextSize){
-			currentTextSize += kChangeTextStep;
-			
-            [self onTextSizeIncreased];
-		}
-	}
+	if (self.paginating == YES) { return; }
+    
+    if (currentTextSize + kChangeTextStep <= kMaxTextSize){
+        currentTextSize += kChangeTextStep;
+        
+        [self onTextSizeIncreased];
+    }
 }
 - (IBAction)decreaseTextSizeClicked:(id)sender {
-	if (!self.paginating){
-		if (currentTextSize - kChangeTextStep >= kMinTextSize) {
-			currentTextSize -= kChangeTextStep;
-        
-            [self onTextSizeDecreased];
-		}
-	}
+    if (self.paginating == YES) { return; }
+    
+    if (currentTextSize - kChangeTextStep >= kMinTextSize) {
+        currentTextSize -= kChangeTextStep;
+    
+        [self onTextSizeDecreased];
+    }
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-    if (!searchResultsPopover) {
-        searchResultsPopover = [[WYPopoverController alloc] initWithContentViewController:searchResViewController];
-        [searchResultsPopover setPopoverContentSize:CGSizeMake(400, 600)];
+    if (self.searchResultsPopover == nil) {
+        self.searchResultsPopover = [[WYPopoverController alloc] initWithContentViewController:self.searchResViewController];
+        [self.searchResultsPopover setPopoverContentSize:CGSizeMake(400, 600)];
     }
-    if (![searchResultsPopover isPopoverVisible]) {
-        [searchResultsPopover presentPopoverFromRect:searchBar.bounds
+    
+    if (self.searchResultsPopover.isPopoverVisible == NO) {
+        [self.searchResultsPopover presentPopoverFromRect:searchBar.bounds
                                               inView:searchBar
                             permittedArrowDirections:WYPopoverArrowDirectionAny
                                             animated:YES];
     }
     
-    if (!self.searching){
+    if (self.searching == NO){
         self.searching = YES;
-        [searchResViewController searchString:[searchBar text]];
+        [self.searchResViewController searchString:searchBar.text];
         [searchBar resignFirstResponder];
     }
 }
 
 - (IBAction)showChapterIndex:(id)sender {
-    if (!chaptersPopover) {
+    if (self.chaptersPopover == nil) {
         ChapterListViewController *chapterListView = [ChapterListViewController new];
         [chapterListView setEpubViewController:self];
-        chaptersPopover = [[WYPopoverController alloc] initWithContentViewController:chapterListView];
-        [chaptersPopover setPopoverContentSize:CGSizeMake(400, 600)];
+        self.chaptersPopover = [[WYPopoverController alloc] initWithContentViewController:chapterListView];
+        [self.chaptersPopover setPopoverContentSize:CGSizeMake(400, 600)];
     }
-    if ([chaptersPopover isPopoverVisible]) {
-        [chaptersPopover dismissPopoverAnimated:YES];
-    }
-    else {
-        [chaptersPopover presentPopoverFromBarButtonItem:self.chapterListButton
+    
+    if (self.chaptersPopover.isPopoverVisible) {
+        [self.chaptersPopover dismissPopoverAnimated:YES];
+    } else {
+        [self.chaptersPopover presentPopoverFromBarButtonItem:self.chapterListButton
                                 permittedArrowDirections:WYPopoverArrowDirectionAny
                                                 animated:YES];
     }
