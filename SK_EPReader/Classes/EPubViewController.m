@@ -39,7 +39,7 @@
     self.loadedEpub = [[EPub alloc] initWithEPubPath:[epubURL path]];
     self.epubLoaded = YES;
     
-    NSLog(@"loadEpub");
+    NSLog(@"Book was loaded at: %@", self.loadedEpub.epubFilePath);
 	[self updatePagination];
 }
 
@@ -49,6 +49,8 @@
     totalPagesCount += chapter.pageCount;
 
 	if (chapter.chapterIndex + 1 < self.loadedEpub.chapters.count) {
+        NSLog(@"Chapter %d processing was launched.", chapter.chapterIndex);
+        
         Chapter *currentChapter = self.loadedEpub.chapters[chapter.chapterIndex + 1];
         
         self.loader = [[ChapterLoader alloc] initWithChapter:currentChapter];
@@ -57,10 +59,16 @@
 
 		[self setPageLabelForAmountOnly];
 	} else {
+        self.paginating = NO;
+        NSLog(@"Processing was finished.");
+        
 		[self setPageLabelForAmountAndIndex];
         [self updateSliderValue];
-		self.paginating = NO;
-		NSLog(@"Pagination Ended!");
+		
+        currentChapterIndex = 0;
+        pageOffsetInChapter = 0;
+        
+        [self loadChapter:currentChapterIndex atPageIndex:pageOffsetInChapter];
 	}
 }
 
@@ -205,7 +213,7 @@
             self.paginating = YES;
             totalPagesCount = 0;
             
-            [self loadChapter:currentChapterIndex atPageIndex:pageOffsetInChapter];
+//            [self loadChapter:currentChapterIndex atPageIndex:pageOffsetInChapter];
             
             Chapter *chapter = self.loadedEpub.chapters.firstObject;
             if (chapter != nil) {
@@ -372,6 +380,10 @@
 
 #pragma mark -
 #pragma mark UIWebView
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    NSLog(@"webView didFailLoadWithError: %@", error);
+}
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView{
     
