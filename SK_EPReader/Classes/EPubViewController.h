@@ -11,21 +11,14 @@
 #import "EPub.h"
 #import "Chapter.h"
 #import "WYPopoverController.h"
+#import "ReadingState.h"
 
 @class SearchResultsViewController;
 @class SearchResult;
 
 static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStoryboardId";
 
-@interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterLoaderDelegate, UISearchBarDelegate> {
-    
-    int currentChapterIndex;
-	int pageOffsetInChapter;
-	int pagesInCurrentSpineCount;
-	int totalPagesCount;
-    
-    NSUInteger currentTextSize;
-}
+@interface EPubViewController : UIViewController <UIWebViewDelegate, ChapterLoaderDelegate, UISearchBarDelegate>
 
 - (IBAction)showChapterIndex:(id)sender;
 - (IBAction)increaseTextSizeClicked:(id)sender;
@@ -36,6 +29,8 @@ static NSString *const EPubViewControllerStoryboardId = @"EPubViewControllerStor
 - (void)loadChapter:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult *)theResult;
 
 - (void)loadEpub:(NSURL*) epubURL;
+
+@property (nonatomic, strong) ReadingState *readingState;
 
 @property (nonatomic, strong) EPub* loadedEpub;
 

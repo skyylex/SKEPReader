@@ -34,6 +34,7 @@
 		42FB6B451B014653001CFBCC /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42FB6B441B014653001CFBCC /* Storyboard.storyboard */; };
 		9466C8231E048F8600B11986 /* ChapterLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9466C8221E048F8600B11986 /* ChapterLoader.m */; };
 		9466C82A1E05303B00B11986 /* SKHashingSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 9466C8291E05303B00B11986 /* SKHashingSupport.m */; };
+		94B4CC3A1E17939B00844F32 /* ReadingState.m in Sources */ = {isa = PBXBuildFile; fileRef = 94B4CC391E17939B00844F32 /* ReadingState.m */; };
 		F9BEFFBA4EA28656020ECB04 /* libPods-SK_EPReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2E89F6A8D1BBE811CCDAEB /* libPods-SK_EPReader.a */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +98,8 @@
 		9466C8241E04900400B11986 /* ChapterLoaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChapterLoaderDelegate.h; sourceTree = "<group>"; };
 		9466C8281E05303B00B11986 /* SKHashingSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKHashingSupport.h; sourceTree = "<group>"; };
 		9466C8291E05303B00B11986 /* SKHashingSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKHashingSupport.m; sourceTree = "<group>"; };
+		94B4CC381E17939B00844F32 /* ReadingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadingState.h; sourceTree = "<group>"; };
+		94B4CC391E17939B00844F32 /* ReadingState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadingState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +215,8 @@
 				9466C8211E048F8600B11986 /* ChapterLoader.h */,
 				9466C8221E048F8600B11986 /* ChapterLoader.m */,
 				9466C8241E04900400B11986 /* ChapterLoaderDelegate.h */,
+				94B4CC381E17939B00844F32 /* ReadingState.h */,
+				94B4CC391E17939B00844F32 /* ReadingState.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 				9466C82A1E05303B00B11986 /* SKHashingSupport.m in Sources */,
 				422CA5E11A587AF100F60A5F /* SearchResult.m in Sources */,
 				422CA5E21A587AF100F60A5F /* SearchResultsViewController.m in Sources */,
+				94B4CC3A1E17939B00844F32 /* ReadingState.m in Sources */,
 				9466C8231E048F8600B11986 /* ChapterLoader.m in Sources */,
 				422CA5501A587A8300F60A5F /* main.m in Sources */,
 				422CA5E41A587AF100F60A5F /* UIWebView+SearchWebView.m in Sources */,

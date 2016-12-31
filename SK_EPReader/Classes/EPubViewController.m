@@ -14,10 +14,6 @@
 #import "Chapter.h"
 #import "ChapterLoader.h"
 
-#define kMinTextSize 50
-#define kMaxTextSize 200
-#define kChangeTextStep 25
-
 @interface EPubViewController()
 
 @property (nonatomic, strong) ChapterLoader *loader;
@@ -34,10 +30,8 @@
 #pragma mark - Loading
 
 - (void)loadEpub:(NSURL *)epubURL{
-    currentChapterIndex = 0;
-    pageOffsetInChapter = 0;
-    pagesInCurrentSpineCount = 0;
-    totalPagesCount = 0;
+    self.readingState = [ReadingState blankState];
+    
 	self.searching = NO;
     
     self.epubLoaded = NO;
@@ -51,16 +45,17 @@
 #pragma mark - ChapterDelegate
 
 - (void)chapterDidFinishLoad:(Chapter *)chapter{
-    totalPagesCount += chapter.pageCount;
+    self.readingState.total += chapter.pageCount;
 
 	if (chapter.chapterIndex + 1 < self.loadedEpub.chapters.count) {
         NSLog(@"Chapter %d processing was launched.", chapter.chapterIndex);
         
         Chapter *currentChapter = self.loadedEpub.chapters[chapter.chapterIndex + 1];
+        int textSize = self.readingState.textSize;
         
         self.loader = [[ChapterLoader alloc] initWithChapter:currentChapter];
         self.loader.delegate = self;
-        [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:currentTextSize];
+        [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:textSize];
 
 		[self setPageLabelForAmountOnly];
 	} else {
@@ -70,10 +65,7 @@
 		[self setPageLabelForAmountAndIndex];
         [self updateSliderValue];
 		
-        currentChapterIndex = 0;
-        pageOffsetInChapter = 0;
-        
-        [self loadChapter:currentChapterIndex atPageIndex:pageOffsetInChapter];
+        [self loadChapter:self.readingState.chapterIndex atPageIndex:self.readingState.pageInChapter];
 	}
 }
 
@@ -83,19 +75,19 @@
 	[self loadChapter:spineIndex atPageIndex:pageIndex highlightSearchResult:nil];
 }
 
-- (void)loadChapter:(NSUInteger)spineIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult*)theResult{
+- (void)loadChapter:(NSUInteger)chapterIndex atPageIndex:(NSUInteger)pageIndex highlightSearchResult:(SearchResult *)theResult {
 	self.webView.hidden = YES;
 	self.currentSearchResult = theResult;
 
 	[self.chaptersPopover dismissPopoverAnimated:YES];
 	[self.searchResultsPopover dismissPopoverAnimated:YES];
 	
-    Chapter *chapter = self.loadedEpub.chapters[spineIndex];
+    Chapter *chapter = self.loadedEpub.chapters[chapterIndex];
 	NSURL *url = [NSURL fileURLWithPath:chapter.spinePath];
 	[self.webView loadRequest:[NSURLRequest requestWithURL:url]];
 	
-    pageOffsetInChapter = pageIndex;
-	currentChapterIndex = spineIndex;
+    self.readingState.pageInChapter = pageIndex;
+	self.readingState.chapterIndex = chapterIndex;
 	
     if (!self.paginating){
         [self setPageLabelForAmountAndIndex];
@@ -108,43 +100,44 @@
 
 // Current position checkers
 - (BOOL)canMoveToNextChapter {
-    return (self.paginating == NO) && (currentChapterIndex + 1 < self.loadedEpub.chapters.count);
+    return (self.paginating == NO) && (self.readingState.chapterIndex + 1 < self.loadedEpub.chapters.count);
 }
 
 - (BOOL)canMoveToPreviousChapter {
-    return (self.paginating == NO) && (currentChapterIndex > 0);
+    return (self.paginating == NO) && (self.readingState.chapterIndex > 0);
 }
 
 // Inside chapter
 - (BOOL)canMoveToNextPage {
-    return (self.paginating == NO) && (pageOffsetInChapter + 1 < pagesInCurrentSpineCount);
+    Chapter *chapter = self.loadedEpub.chapters[self.readingState.chapterIndex];
+    return (self.paginating == NO) && (self.readingState.pageInChapter + 1 < chapter.pageCount);
 }
 
 // Inside chapter
 - (BOOL)canMoveToPreviousPage {
-    return (self.paginating == NO) && (pageOffsetInChapter > 0);
+    return (self.paginating == NO) && (self.readingState.pageInChapter > 0);
 }
 
 // Actual movement
 - (void)moveToNextChapter {
     if (self.canMoveToNextChapter) {
-        currentChapterIndex = currentChapterIndex + 1;
-        [self loadChapter:currentChapterIndex atPageIndex:0];
+        self.readingState.chapterIndex = self.readingState.chapterIndex + 1;
+        [self loadChapter:self.readingState.chapterIndex atPageIndex:0];
 	}
 }
 
 - (void)moveToPreviousChapter {
     if (self.canMoveToPreviousChapter) {
-        currentChapterIndex = currentChapterIndex - 1;
-        Chapter *chapter = self.loadedEpub.chapters[currentChapterIndex];
-        [self loadChapter:currentChapterIndex atPageIndex:chapter.pageCount - 1];
+        self.readingState.chapterIndex = self.readingState.chapterIndex - 1;
+        Chapter *chapter = self.loadedEpub.chapters[self.readingState.chapterIndex];
+        [self loadChapter:self.readingState.chapterIndex atPageIndex:chapter.pageCount - 1];
 	}
 }
 
 - (void)moveToNextPage {
 	if (self.canMoveToNextPage) {
-        pageOffsetInChapter = pageOffsetInChapter + 1;
-        [self moveToPageInCurrentChapter:pageOffsetInChapter];
+        self.readingState.pageInChapter = self.readingState.pageInChapter + 1;
+        [self moveToPageInCurrentChapter:self.readingState.pageInChapter];
     } else if (self.canMoveToNextChapter) {
         [self moveToNextChapter];
 	}
@@ -152,17 +145,17 @@
 
 - (void)moveToPreviousPage {
 	if (self.canMoveToPreviousPage) {
-        pageOffsetInChapter = pageOffsetInChapter - 1;
-        [self moveToPageInCurrentChapter:pageOffsetInChapter];
+        self.readingState.pageInChapter = self.readingState.pageInChapter - 1;
+        [self moveToPageInCurrentChapter:self.readingState.pageInChapter];
     } else if (self.canMoveToPreviousChapter) {
         [self moveToPreviousChapter];
 	}
 }
 
 - (void)moveToPageInCurrentChapter:(NSUInteger)pageIndex {
-    if (pageIndex >= pagesInCurrentSpineCount){
-        pageIndex = pagesInCurrentSpineCount - 1;
-        pageOffsetInChapter = pagesInCurrentSpineCount - 1;
+    Chapter *chapter = self.loadedEpub.chapters[self.readingState.chapterIndex];
+    if (pageIndex >= chapter.pageCount){
+        pageIndex = chapter.pageCount - 1;
     }
     
     float pageOffset = pageIndex * self.webView.bounds.size.width;
@@ -184,12 +177,12 @@
 #pragma mark - Page Label
 
 - (void)setPageLabelForAmountOnly {
-    NSString *text = [NSString stringWithFormat:@"?/%d", totalPagesCount];
+    NSString *text = [NSString stringWithFormat:@"?/%d", self.readingState.total];
     [self.currentPageLabel setText:text];
 }
 
 - (void)setPageLabelForAmountAndIndex {
-    NSString *text = [NSString stringWithFormat:@"%d/%d", self.calculateCurrentPageInBook, totalPagesCount];
+    NSString *text = [NSString stringWithFormat:@"%d/%d", self.calculateCurrentPageInBook, self.readingState.total];
     [self.currentPageLabel setText:text];
 }
 
@@ -201,14 +194,14 @@
     
     // TODO: Could be cached for "heavy" books with a lot of chapters (as offset for each book)
     [chapters enumerateObjectsUsingBlock:^(Chapter *currentChapter, NSUInteger idx, BOOL *stop) {
-        if (idx < currentChapterIndex) {
+        if (idx < self.readingState.chapterIndex) {
             previousChapterPages += currentChapter.pageCount;
         } else {
             *stop = YES;
         }
     }];
     
-    return previousChapterPages + pageOffsetInChapter + 1;
+    return previousChapterPages + self.readingState.pageInChapter + 1;
 }
 
 - (void)updatePagination{
@@ -216,13 +209,15 @@
         if (!self.paginating){
             NSLog(@"Pagination Started!");
             self.paginating = YES;
-            totalPagesCount = 0;
+            self.readingState.total = 0;
             
             Chapter *chapter = self.loadedEpub.chapters.firstObject;
             if (chapter != nil) {
+                int textSize = self.readingState.textSize;
+                
                 self.loader = [[ChapterLoader alloc] initWithChapter:chapter];
                 self.loader.delegate = self;
-                [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:currentTextSize];
+                [self.loader loadChapterWithWindowSize:self.webView.bounds fontPercentSize:textSize];
                 
                 [self.currentPageLabel setText:@"?/?"];
             }
@@ -233,20 +228,15 @@
 #pragma mark - Event-based methods
 
 - (void)onTextSizeIncreased {
-    if (currentTextSize == kMaxTextSize){
-        [self.incTextSizeButton setEnabled:NO];
-    }
-    [self.decTextSizeButton setEnabled:YES];
+    self.incTextSizeButton.enabled = self.readingState.canIncreaseFontSize;
+    self.decTextSizeButton.enabled = YES;
     
     [self onTextSizeChanged];
 }
 
 - (void)onTextSizeDecreased {
-    if (currentTextSize == kMinTextSize) {
-        [self.decTextSizeButton setEnabled:NO];
-    }
-    
-    [self.incTextSizeButton setEnabled:YES];
+    self.decTextSizeButton.enabled = self.readingState.canDecreaseFontSize;
+    self.incTextSizeButton.enabled = YES;
     
     [self onTextSizeChanged];
 }
@@ -260,8 +250,8 @@
 - (IBAction)increaseTextSizeClicked:(id)sender{
 	if (self.paginating == YES) { return; }
     
-    if (currentTextSize + kChangeTextStep <= kMaxTextSize){
-        currentTextSize += kChangeTextStep;
+    if (self.readingState.canIncreaseFontSize){
+        [self.readingState increaseFontOnStep];
         
         [self onTextSizeIncreased];
     }
@@ -269,8 +259,8 @@
 - (IBAction)decreaseTextSizeClicked:(id)sender {
     if (self.paginating == YES) { return; }
     
-    if (currentTextSize - kChangeTextStep >= kMinTextSize) {
-        currentTextSize -= kChangeTextStep;
+    if (self.readingState.canDecreaseFontSize) {
+        [self.readingState increaseFontOnStep];
     
         [self onTextSizeDecreased];
     }
@@ -322,10 +312,10 @@
 
 - (void)updateSliderLimits {
     NSAssert(self.pageSlider != nil, @"Page slider is nil");
-    NSAssert(totalPagesCount > 0, @"No pages in the book");
+    NSAssert(self.readingState.total > 0, @"No pages in the book");
     
     int presentedFirstPage = 1;
-    int presentedLastPage = totalPagesCount;
+    int presentedLastPage = self.readingState.total;
     if (self.pageSlider.minimumValue != presentedFirstPage) {
         self.pageSlider.minimumValue = presentedFirstPage;
     }
@@ -337,7 +327,7 @@
 
 - (void)updateSliderValue {
     NSUInteger currentPageInBook = [self calculateCurrentPageInBook];
-    if (currentPageInBook == 0 || currentPageInBook >= totalPagesCount) { return; }
+    if (currentPageInBook == 0 || currentPageInBook >= self.readingState.total) { return; }
     
     /// Not the best place to update limits, but the most stable way to ensure that
     /// slider has proper max-min borders
@@ -356,7 +346,7 @@
         targetPage = 1;
     }
     
-    NSString *text = [NSString stringWithFormat:@"%d/%d", targetPage, totalPagesCount];
+    NSString *text = [NSString stringWithFormat:@"%d/%d", targetPage, self.readingState.total];
 	[self.currentPageLabel setText:text];
 }
 
@@ -404,7 +394,7 @@
     
     NSString *insertRule1 = [NSString stringWithFormat:@"addCSSRule('html', 'padding: 0px; height: %fpx; -webkit-column-gap: 0px; -webkit-column-width: %fpx;')", self.webView.frame.size.height, self.webView.frame.size.width];
     NSString *insertRule2 = [NSString stringWithFormat:@"addCSSRule('p', 'text-align: justify;')"];
-    NSString *setTextSizeRule = [NSString stringWithFormat:@"addCSSRule('body', '-webkit-text-size-adjust: %d%%;')", currentTextSize];
+    NSString *setTextSizeRule = [NSString stringWithFormat:@"addCSSRule('body', '-webkit-text-size-adjust: %d%%;')", self.readingState.textSize];
     NSString *setHighlightColorRule = [NSString stringWithFormat:@"addCSSRule('highlight', 'background-color: yellow;')"];
     
     
@@ -419,10 +409,7 @@
         [self.webView highlightAllOccurencesOfString:self.currentSearchResult.originatingQuery];
     }
     
-    float totalWidth = [[self.webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.scrollWidth"] floatValue];
-    pagesInCurrentSpineCount = (NSUInteger)(totalWidth / self.webView.bounds.size.width);
-    
-    [self moveToPageInCurrentChapter:pageOffsetInChapter];
+    [self moveToPageInCurrentChapter:self.readingState.pageInChapter];
 }
 
 #pragma mark - Rotation support
@@ -452,7 +439,7 @@
 #pragma mark - Prepare
 
 - (void)prepareDisplaySettings {
-    currentTextSize = 100;
+    
 }
 
 - (void)prepareSubscriptions {
